@@ -1,0 +1,4 @@
+# Machine memory, taken 2026-11-17 11:10 IST
+$ sysctl hw.memsize
+hw.memsize: 8589934592
+(8589934592 bytes = 8 GiB)

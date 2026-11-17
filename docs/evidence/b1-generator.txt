@@ -1,0 +1,18 @@
+# Generator evidence — 2026-11-16 19:45 IST
+$ uv run pytest -q
+...........                                                              [100%]
+11 passed in 0.15s
+
+$ uv run ruff check src tests
+All checks passed!
+
+## Generator run: 5000 events, seed 42, applied to PostgreSQL 17.12 (report: b1-generator-5000.json)
+Live rows in PostgreSQL vs (inserts - deletes) from the report:
+customers: 122
+products: 36
+orders: 490
+order_items: 1137
+payments: 490
+
+## Mix at 100,000 events (dry run, seed 42)
+{'insert': 53409, 'update': 38454, 'delete': 8137} {'insert': '53.4%', 'update': '38.5%', 'delete': '8.1%'}

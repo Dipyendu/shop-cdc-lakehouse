@@ -1,0 +1,27 @@
+{
+  "customers": {
+    "history_rows": 86208,
+    "expected_versions": 86208,
+    "keys": 30001,
+    "1_overlapping_or_gapped_intervals": 0,
+    "2_live_keys_without_exactly_one_current": 0,
+    "3_deleted_keys_with_a_current_row": 0,
+    "4_keys_with_wrong_version_count": 0,
+    "examples": [],
+    "5_current_rows_differing_from_silver": 0,
+    "pass": true
+  },
+  "products": {
+    "history_rows": 45462,
+    "expected_versions": 45462,
+    "keys": 6855,
+    "1_overlapping_or_gapped_intervals": 0,
+    "2_live_keys_without_exactly_one_current": 0,
+    "3_deleted_keys_with_a_current_row": 0,
+    "4_keys_with_wrong_version_count": 0,
+    "examples": [],
+    "5_current_rows_differing_from_silver": 0,
+    "pass": true
+  },
+  "ALL_PASS": true
+}

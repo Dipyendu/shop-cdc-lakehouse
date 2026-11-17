@@ -1,0 +1,14 @@
+# No secrets here: values come from the environment (scripts/with-secrets.sh).
+shop:
+  target: dev
+  outputs:
+    dev:
+      type: databricks
+      catalog: "{{ env_var('SHOP_CATALOG', 'analytics') }}"
+      schema: "{{ env_var('SHOP_MARTS_SCHEMA', 'shop_marts') }}"
+      host: "{{ env_var('DATABRICKS_HOST') | replace('https://', '') }}"
+      http_path: "{{ env_var('SHOP_WAREHOUSE_HTTP_PATH') }}"
+      token: "{{ env_var('DATABRICKS_TOKEN') }}"
+      threads: 8
+      connect_timeout: 60
+      connect_retries: 2

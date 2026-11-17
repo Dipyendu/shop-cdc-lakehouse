@@ -1,0 +1,10 @@
+{
+  "job_failed": true,
+  "job_error": "OperationFailed: failed to reach TERMINATED or SKIPPED, got RunLifeCycleState.INTERNAL_ERROR: Task bronze_silver failed with message: Workload failed, see run output for details. This caused all downstream tasks to get skipped.",
+  "task_error": "StreamingQueryException: [STREAM_FAILED] Query [id = 632e3ed1-52ad-4654-894a-2db2ab4c8088, runId = bbf2424f-1393-4ec1-830f-8b55aa42eed3] terminated with exception: [PYTHON_EXCEPTION] [root session: f41e4fa1-7f6b-496c-9040-0024c18b7341][cloned session: 31655ef8-3ce6-40ee-bf61-6cc8262550fc][userId: 76",
+  "rows_stored": {
+    "bronze": 0,
+    "silver": 0
+  },
+  "PASS": true
+}

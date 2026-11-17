@@ -1,0 +1,10 @@
+# Docker check — 2026-11-16 19:42 IST
+$ docker info --format "{{.MemTotal}} {{.NCPU}} {{.ServerVersion}} {{.OperatingSystem}} {{.Architecture}}"
+4107202560 3 29.9.3 Docker Desktop aarch64
+VM memory: 3916 MiB; CPUs: 3
+Memory cap for this stack (40 %): 1566 MiB
+$ memory_pressure | tail -1
+System-wide memory free percentage: 42%
+Databricks CLI: Databricks CLI v1.26.0
+uv: uv 0.13.1 (62faed335 2026-10-13 aarch64-apple-darwin)
+python: Python 3.12.15

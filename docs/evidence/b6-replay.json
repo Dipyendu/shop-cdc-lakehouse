@@ -1,0 +1,113 @@
+{
+  "before": {
+    "customers": {
+      "rows": 2924,
+      "table_hash": "55d7161d6e23410f145ed52f762929446a2e04c04f41a6f380bc1e43390084b8"
+    },
+    "products": {
+      "rows": 658,
+      "table_hash": "48022ec70cee0037c19a29497fa573a85c255eb58f773fe71fdc2483d4333b5f"
+    },
+    "orders": {
+      "rows": 11061,
+      "table_hash": "3c1df30bbcafa69fcd92735a92145db0980be61af6464993d2b82af81aa1087a"
+    },
+    "order_items": {
+      "rows": 27705,
+      "table_hash": "436b18026cd708217edfaaa8723d8c9950e6c1e7a3c07412a191d37ca272622c"
+    },
+    "payments": {
+      "rows": 11061,
+      "table_hash": "6136d580fd01ed2167eae2f670af45e757eda633bc4fdb71a789ffbfe04fce4c"
+    }
+  },
+  "after": {
+    "customers": {
+      "rows": 2924,
+      "table_hash": "55d7161d6e23410f145ed52f762929446a2e04c04f41a6f380bc1e43390084b8"
+    },
+    "products": {
+      "rows": 658,
+      "table_hash": "48022ec70cee0037c19a29497fa573a85c255eb58f773fe71fdc2483d4333b5f"
+    },
+    "orders": {
+      "rows": 11061,
+      "table_hash": "3c1df30bbcafa69fcd92735a92145db0980be61af6464993d2b82af81aa1087a"
+    },
+    "order_items": {
+      "rows": 27705,
+      "table_hash": "436b18026cd708217edfaaa8723d8c9950e6c1e7a3c07412a191d37ca272622c"
+    },
+    "payments": {
+      "rows": 11061,
+      "table_hash": "6136d580fd01ed2167eae2f670af45e757eda633bc4fdb71a789ffbfe04fce4c"
+    }
+  },
+  "run": {
+    "run_id": 950298620944821,
+    "seconds": 65.4,
+    "started": "2026-11-16 21:06"
+  },
+  "silver_last_operation_before": {
+    "customers": {
+      "version": 1,
+      "operation": "MERGE",
+      "timestamp": "2026-11-16 15:32:47+00:00"
+    },
+    "products": {
+      "version": 1,
+      "operation": "MERGE",
+      "timestamp": "2026-11-16 15:33:08+00:00"
+    },
+    "orders": {
+      "version": 3,
+      "operation": "OPTIMIZE",
+      "timestamp": "2026-11-16 15:33:41+00:00"
+    },
+    "order_items": {
+      "version": 3,
+      "operation": "OPTIMIZE",
+      "timestamp": "2026-11-16 15:34:09+00:00"
+    },
+    "payments": {
+      "version": 3,
+      "operation": "OPTIMIZE",
+      "timestamp": "2026-11-16 15:34:36+00:00"
+    }
+  },
+  "silver_last_operation_after": {
+    "customers": {
+      "version": 1,
+      "operation": "MERGE",
+      "timestamp": "2026-11-16 15:36:39+00:00"
+    },
+    "products": {
+      "version": 1,
+      "operation": "MERGE",
+      "timestamp": "2026-11-16 15:36:46+00:00"
+    },
+    "orders": {
+      "version": 1,
+      "operation": "MERGE",
+      "timestamp": "2026-11-16 15:36:52+00:00"
+    },
+    "order_items": {
+      "version": 1,
+      "operation": "MERGE",
+      "timestamp": "2026-11-16 15:36:58+00:00"
+    },
+    "payments": {
+      "version": 1,
+      "operation": "MERGE",
+      "timestamp": "2026-11-16 15:37:04+00:00"
+    }
+  },
+  "identical": {
+    "customers": true,
+    "products": true,
+    "orders": true,
+    "order_items": true,
+    "payments": true
+  },
+  "PASS": true
+}

@@ -1,0 +1,38 @@
+{
+  "customers": {
+    "oracle_rows": 30001,
+    "silver_rows": 30001,
+    "oracle_hash": "c9523f9729108c207c6db1b46407dee0c161106fdd2704584001b0554ded2bd8",
+    "silver_hash": "c9523f9729108c207c6db1b46407dee0c161106fdd2704584001b0554ded2bd8",
+    "identical": true
+  },
+  "products": {
+    "oracle_rows": 6855,
+    "silver_rows": 6855,
+    "oracle_hash": "6e723dde6d48f6ecc709c101dffe10221a383cddad855566f5fb44518b706b24",
+    "silver_hash": "6e723dde6d48f6ecc709c101dffe10221a383cddad855566f5fb44518b706b24",
+    "identical": true
+  },
+  "orders": {
+    "oracle_rows": 108971,
+    "silver_rows": 108971,
+    "oracle_hash": "c7ec089c92fb2015e7f859060fe0e56198bc450c01f4c0293e27229db2be3a58",
+    "silver_hash": "c7ec089c92fb2015e7f859060fe0e56198bc450c01f4c0293e27229db2be3a58",
+    "identical": true
+  },
+  "order_items": {
+    "oracle_rows": 271429,
+    "silver_rows": 271429,
+    "oracle_hash": "0b2d725abba947d63728c80813bb4df5bdd2d3a757318b354ad7a459b63f4a18",
+    "silver_hash": "0b2d725abba947d63728c80813bb4df5bdd2d3a757318b354ad7a459b63f4a18",
+    "identical": true
+  },
+  "payments": {
+    "oracle_rows": 108971,
+    "silver_rows": 108971,
+    "oracle_hash": "992d81c3d61941249e4be21d0f649419ad3d16f8f100030f8f7071efa088560d",
+    "silver_hash": "992d81c3d61941249e4be21d0f649419ad3d16f8f100030f8f7071efa088560d",
+    "identical": true
+  },
+  "ALL_IDENTICAL": true
+}

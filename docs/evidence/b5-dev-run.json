@@ -1,0 +1,34 @@
+{
+  "upload": {
+    "uploaded": 5,
+    "skipped_existing": 0
+  },
+  "upload_seconds": 9.1,
+  "run": {
+    "run_id": 691941533767529,
+    "seconds": 105.5,
+    "started": "2026-11-16 20:18"
+  },
+  "silver_rows_and_deleted_marks": {
+    "customers": [
+      153,
+      31
+    ],
+    "products": [
+      37,
+      0
+    ],
+    "orders": [
+      554,
+      64
+    ],
+    "order_items": [
+      1386,
+      249
+    ],
+    "payments": [
+      554,
+      64
+    ]
+  }
+}

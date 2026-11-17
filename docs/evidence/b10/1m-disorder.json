@@ -1,0 +1,326 @@
+{
+  "tag": "d1m3",
+  "require_newer": true,
+  "files_per_third": {
+    "customers": {
+      "oldest": [
+        "shop.public.customers__p0__000000000000-000000004999.jsonl",
+        "shop.public.customers__p0__000000005000-000000009999.jsonl",
+        "shop.public.customers__p0__000000010000-000000014999.jsonl",
+        "shop.public.customers__p0__000000015001-000000019999.jsonl",
+        "shop.public.customers__p0__000000020000-000000024999.jsonl",
+        "shop.public.customers__p0__000000025000-000000029999.jsonl"
+      ],
+      "middle": [
+        "shop.public.customers__p0__000000030000-000000034999.jsonl",
+        "shop.public.customers__p0__000000035000-000000039999.jsonl",
+        "shop.public.customers__p0__000000040000-000000044999.jsonl",
+        "shop.public.customers__p0__000000045000-000000049999.jsonl",
+        "shop.public.customers__p0__000000050000-000000054999.jsonl",
+        "shop.public.customers__p0__000000055001-000000059999.jsonl",
+        "shop.public.customers__p0__000000060000-000000064999.jsonl",
+        "shop.public.customers__p0__000000065000-000000069999.jsonl"
+      ],
+      "newest": [
+        "shop.public.customers__p0__000000070000-000000074999.jsonl",
+        "shop.public.customers__p0__000000075000-000000079999.jsonl",
+        "shop.public.customers__p0__000000080000-000000084999.jsonl",
+        "shop.public.customers__p0__000000085000-000000089999.jsonl",
+        "shop.public.customers__p0__000000090000-000000094999.jsonl",
+        "shop.public.customers__p0__000000095000-000000098968.jsonl"
+      ]
+    },
+    "products": {
+      "oldest": [
+        "shop.public.products__p0__000000000000-000000004999.jsonl",
+        "shop.public.products__p0__000000005000-000000009999.jsonl",
+        "shop.public.products__p0__000000010000-000000014999.jsonl"
+      ],
+      "middle": [
+        "shop.public.products__p0__000000015000-000000019999.jsonl",
+        "shop.public.products__p0__000000020000-000000024999.jsonl",
+        "shop.public.products__p0__000000025000-000000029999.jsonl",
+        "shop.public.products__p0__000000030000-000000034999.jsonl"
+      ],
+      "newest": [
+        "shop.public.products__p0__000000035000-000000039999.jsonl",
+        "shop.public.products__p0__000000040000-000000044999.jsonl",
+        "shop.public.products__p0__000000045000-000000046358.jsonl"
+      ]
+    },
+    "orders": {
+      "oldest": [
+        "shop.public.orders__p0__000000000000-000000004999.jsonl",
+        "shop.public.orders__p0__000000005000-000000009998.jsonl",
+        "shop.public.orders__p0__000000010000-000000014999.jsonl",
+        "shop.public.orders__p0__000000015000-000000019999.jsonl",
+        "shop.public.orders__p0__000000020000-000000024999.jsonl",
+        "shop.public.orders__p0__000000025000-000000029999.jsonl",
+        "shop.public.orders__p0__000000030000-000000034999.jsonl",
+        "shop.public.orders__p0__000000035000-000000039999.jsonl",
+        "shop.public.orders__p0__000000040000-000000044999.jsonl",
+        "shop.public.orders__p0__000000045000-000000049999.jsonl",
+        "shop.public.orders__p0__000000050000-000000054999.jsonl",
+        "shop.public.orders__p0__000000055000-000000059999.jsonl",
+        "shop.public.orders__p0__000000060000-000000064999.jsonl",
+        "shop.public.orders__p0__000000065000-000000069999.jsonl",
+        "shop.public.orders__p0__000000070000-000000074999.jsonl",
+        "shop.public.orders__p0__000000075000-000000079998.jsonl",
+        "shop.public.orders__p0__000000080000-000000084999.jsonl",
+        "shop.public.orders__p0__000000085000-000000089999.jsonl",
+        "shop.public.orders__p0__000000090000-000000094999.jsonl",
+        "shop.public.orders__p0__000000095000-000000099999.jsonl",
+        "shop.public.orders__p0__000000100000-000000104999.jsonl",
+        "shop.public.orders__p0__000000105000-000000109999.jsonl"
+      ],
+      "middle": [
+        "shop.public.orders__p0__000000110000-000000114999.jsonl",
+        "shop.public.orders__p0__000000115000-000000119999.jsonl",
+        "shop.public.orders__p0__000000120000-000000124999.jsonl",
+        "shop.public.orders__p0__000000125000-000000129999.jsonl",
+        "shop.public.orders__p0__000000130000-000000134999.jsonl",
+        "shop.public.orders__p0__000000135000-000000139999.jsonl",
+        "shop.public.orders__p0__000000140000-000000144999.jsonl",
+        "shop.public.orders__p0__000000145001-000000149999.jsonl",
+        "shop.public.orders__p0__000000150000-000000154999.jsonl",
+        "shop.public.orders__p0__000000155000-000000159999.jsonl",
+        "shop.public.orders__p0__000000160000-000000164999.jsonl",
+        "shop.public.orders__p0__000000165000-000000169998.jsonl",
+        "shop.public.orders__p0__000000170000-000000174999.jsonl",
+        "shop.public.orders__p0__000000175000-000000179999.jsonl",
+        "shop.public.orders__p0__000000180000-000000184999.jsonl",
+        "shop.public.orders__p0__000000185000-000000189999.jsonl",
+        "shop.public.orders__p0__000000190000-000000194999.jsonl",
+        "shop.public.orders__p0__000000195000-000000199999.jsonl",
+        "shop.public.orders__p0__000000200000-000000204999.jsonl",
+        "shop.public.orders__p0__000000205000-000000209999.jsonl",
+        "shop.public.orders__p0__000000210000-000000214999.jsonl",
+        "shop.public.orders__p0__000000215000-000000219999.jsonl"
+      ],
+      "newest": [
+        "shop.public.orders__p0__000000220000-000000224999.jsonl",
+        "shop.public.orders__p0__000000225000-000000229999.jsonl",
+        "shop.public.orders__p0__000000230000-000000234999.jsonl",
+        "shop.public.orders__p0__000000235000-000000239999.jsonl",
+        "shop.public.orders__p0__000000240000-000000244999.jsonl",
+        "shop.public.orders__p0__000000245000-000000249999.jsonl",
+        "shop.public.orders__p0__000000250000-000000254999.jsonl",
+        "shop.public.orders__p0__000000255000-000000259999.jsonl",
+        "shop.public.orders__p0__000000260000-000000264999.jsonl",
+        "shop.public.orders__p0__000000265000-000000269999.jsonl",
+        "shop.public.orders__p0__000000270000-000000274999.jsonl",
+        "shop.public.orders__p0__000000275000-000000279998.jsonl",
+        "shop.public.orders__p0__000000280000-000000284999.jsonl",
+        "shop.public.orders__p0__000000285000-000000289999.jsonl",
+        "shop.public.orders__p0__000000290000-000000294999.jsonl",
+        "shop.public.orders__p0__000000295000-000000299999.jsonl",
+        "shop.public.orders__p0__000000300000-000000304999.jsonl",
+        "shop.public.orders__p0__000000305000-000000309999.jsonl",
+        "shop.public.orders__p0__000000310000-000000314999.jsonl",
+        "shop.public.orders__p0__000000315001-000000319999.jsonl",
+        "shop.public.orders__p0__000000320000-000000324999.jsonl",
+        "shop.public.orders__p0__000000325001-000000325983.jsonl"
+      ]
+    },
+    "order_items": {
+      "oldest": [
+        "shop.public.order_items__p0__000000000000-000000004999.jsonl",
+        "shop.public.order_items__p0__000000005000-000000009999.jsonl",
+        "shop.public.order_items__p0__000000010000-000000014999.jsonl",
+        "shop.public.order_items__p0__000000015000-000000019999.jsonl",
+        "shop.public.order_items__p0__000000020000-000000024998.jsonl",
+        "shop.public.order_items__p0__000000025000-000000029999.jsonl",
+        "shop.public.order_items__p0__000000030000-000000034999.jsonl",
+        "shop.public.order_items__p0__000000035000-000000039999.jsonl",
+        "shop.public.order_items__p0__000000040000-000000044999.jsonl",
+        "shop.public.order_items__p0__000000045000-000000049998.jsonl",
+        "shop.public.order_items__p0__000000050000-000000054998.jsonl",
+        "shop.public.order_items__p0__000000055000-000000059999.jsonl",
+        "shop.public.order_items__p0__000000060000-000000064999.jsonl",
+        "shop.public.order_items__p0__000000065000-000000069998.jsonl",
+        "shop.public.order_items__p0__000000070000-000000074999.jsonl",
+        "shop.public.order_items__p0__000000075000-000000079999.jsonl",
+        "shop.public.order_items__p0__000000080000-000000084999.jsonl",
+        "shop.public.order_items__p0__000000085000-000000089999.jsonl",
+        "shop.public.order_items__p0__000000090001-000000094999.jsonl",
+        "shop.public.order_items__p0__000000095000-000000099999.jsonl",
+        "shop.public.order_items__p0__000000100000-000000104999.jsonl",
+        "shop.public.order_items__p0__000000105000-000000109999.jsonl",
+        "shop.public.order_items__p0__000000110000-000000114999.jsonl",
+        "shop.public.order_items__p0__000000115000-000000119999.jsonl",
+        "shop.public.order_items__p0__000000120000-000000124999.jsonl"
+      ],
+      "middle": [
+        "shop.public.order_items__p0__000000125000-000000129999.jsonl",
+        "shop.public.order_items__p0__000000130000-000000134999.jsonl",
+        "shop.public.order_items__p0__000000135000-000000139999.jsonl",
+        "shop.public.order_items__p0__000000140000-000000144999.jsonl",
+        "shop.public.order_items__p0__000000145000-000000149999.jsonl",
+        "shop.public.order_items__p0__000000150000-000000154998.jsonl",
+        "shop.public.order_items__p0__000000155000-000000159999.jsonl",
+        "shop.public.order_items__p0__000000160000-000000164999.jsonl",
+        "shop.public.order_items__p0__000000165000-000000169999.jsonl",
+        "shop.public.order_items__p0__000000170000-000000174999.jsonl",
+        "shop.public.order_items__p0__000000175000-000000179999.jsonl",
+        "shop.public.order_items__p0__000000180000-000000184999.jsonl",
+        "shop.public.order_items__p0__000000185001-000000189999.jsonl",
+        "shop.public.order_items__p0__000000190000-000000194999.jsonl",
+        "shop.public.order_items__p0__000000195000-000000199999.jsonl",
+        "shop.public.order_items__p0__000000200001-000000204999.jsonl",
+        "shop.public.order_items__p0__000000205000-000000209999.jsonl",
+        "shop.public.order_items__p0__000000210000-000000214999.jsonl",
+        "shop.public.order_items__p0__000000215001-000000219999.jsonl",
+        "shop.public.order_items__p0__000000220000-000000224999.jsonl",
+        "shop.public.order_items__p0__000000225000-000000229999.jsonl",
+        "shop.public.order_items__p0__000000230000-000000234999.jsonl",
+        "shop.public.order_items__p0__000000235001-000000239999.jsonl",
+        "shop.public.order_items__p0__000000240000-000000244999.jsonl",
+        "shop.public.order_items__p0__000000245000-000000249999.jsonl"
+      ],
+      "newest": [
+        "shop.public.order_items__p0__000000250000-000000254999.jsonl",
+        "shop.public.order_items__p0__000000255001-000000259999.jsonl",
+        "shop.public.order_items__p0__000000260000-000000264999.jsonl",
+        "shop.public.order_items__p0__000000265000-000000269999.jsonl",
+        "shop.public.order_items__p0__000000270000-000000274999.jsonl",
+        "shop.public.order_items__p0__000000275000-000000279999.jsonl",
+        "shop.public.order_items__p0__000000280001-000000284999.jsonl",
+        "shop.public.order_items__p0__000000285000-000000289998.jsonl",
+        "shop.public.order_items__p0__000000290000-000000294999.jsonl",
+        "shop.public.order_items__p0__000000295001-000000299999.jsonl",
+        "shop.public.order_items__p0__000000300000-000000304999.jsonl",
+        "shop.public.order_items__p0__000000305000-000000309999.jsonl",
+        "shop.public.order_items__p0__000000310000-000000314999.jsonl",
+        "shop.public.order_items__p0__000000315000-000000319998.jsonl",
+        "shop.public.order_items__p0__000000320000-000000324999.jsonl",
+        "shop.public.order_items__p0__000000325000-000000329999.jsonl",
+        "shop.public.order_items__p0__000000330001-000000334999.jsonl",
+        "shop.public.order_items__p0__000000335001-000000339999.jsonl",
+        "shop.public.order_items__p0__000000340001-000000344999.jsonl",
+        "shop.public.order_items__p0__000000345000-000000349999.jsonl",
+        "shop.public.order_items__p0__000000350000-000000354998.jsonl",
+        "shop.public.order_items__p0__000000355000-000000359999.jsonl",
+        "shop.public.order_items__p0__000000360000-000000364999.jsonl",
+        "shop.public.order_items__p0__000000365001-000000369999.jsonl",
+        "shop.public.order_items__p0__000000370000-000000370883.jsonl"
+      ]
+    },
+    "payments": {
+      "oldest": [
+        "shop.public.payments__p0__000000000000-000000004999.jsonl",
+        "shop.public.payments__p0__000000005000-000000009999.jsonl",
+        "shop.public.payments__p0__000000010000-000000014999.jsonl",
+        "shop.public.payments__p0__000000015000-000000019999.jsonl",
+        "shop.public.payments__p0__000000020000-000000024999.jsonl",
+        "shop.public.payments__p0__000000025000-000000029999.jsonl",
+        "shop.public.payments__p0__000000030000-000000034999.jsonl",
+        "shop.public.payments__p0__000000035000-000000039999.jsonl",
+        "shop.public.payments__p0__000000040000-000000044999.jsonl",
+        "shop.public.payments__p0__000000045000-000000049999.jsonl",
+        "shop.public.payments__p0__000000050000-000000054999.jsonl",
+        "shop.public.payments__p0__000000055000-000000059999.jsonl",
+        "shop.public.payments__p0__000000060000-000000064999.jsonl",
+        "shop.public.payments__p0__000000065000-000000069999.jsonl",
+        "shop.public.payments__p0__000000070000-000000074999.jsonl",
+        "shop.public.payments__p0__000000075000-000000079999.jsonl"
+      ],
+      "middle": [
+        "shop.public.payments__p0__000000080000-000000084999.jsonl",
+        "shop.public.payments__p0__000000085000-000000089999.jsonl",
+        "shop.public.payments__p0__000000090000-000000094999.jsonl",
+        "shop.public.payments__p0__000000095000-000000099999.jsonl",
+        "shop.public.payments__p0__000000100000-000000104999.jsonl",
+        "shop.public.payments__p0__000000105000-000000109999.jsonl",
+        "shop.public.payments__p0__000000110000-000000114999.jsonl",
+        "shop.public.payments__p0__000000115000-000000119999.jsonl",
+        "shop.public.payments__p0__000000120000-000000124999.jsonl",
+        "shop.public.payments__p0__000000125000-000000129999.jsonl",
+        "shop.public.payments__p0__000000130000-000000134998.jsonl",
+        "shop.public.payments__p0__000000135000-000000139999.jsonl",
+        "shop.public.payments__p0__000000140000-000000144999.jsonl",
+        "shop.public.payments__p0__000000145000-000000149999.jsonl",
+        "shop.public.payments__p0__000000150000-000000154999.jsonl",
+        "shop.public.payments__p0__000000155000-000000159999.jsonl",
+        "shop.public.payments__p0__000000160000-000000164999.jsonl"
+      ],
+      "newest": [
+        "shop.public.payments__p0__000000165001-000000169998.jsonl",
+        "shop.public.payments__p0__000000170000-000000174999.jsonl",
+        "shop.public.payments__p0__000000175000-000000179999.jsonl",
+        "shop.public.payments__p0__000000180000-000000184999.jsonl",
+        "shop.public.payments__p0__000000185000-000000189999.jsonl",
+        "shop.public.payments__p0__000000190000-000000194998.jsonl",
+        "shop.public.payments__p0__000000195000-000000199999.jsonl",
+        "shop.public.payments__p0__000000200000-000000204999.jsonl",
+        "shop.public.payments__p0__000000205001-000000209999.jsonl",
+        "shop.public.payments__p0__000000210000-000000214999.jsonl",
+        "shop.public.payments__p0__000000215000-000000219999.jsonl",
+        "shop.public.payments__p0__000000220000-000000224999.jsonl",
+        "shop.public.payments__p0__000000225000-000000229999.jsonl",
+        "shop.public.payments__p0__000000230000-000000234999.jsonl",
+        "shop.public.payments__p0__000000235000-000000239998.jsonl",
+        "shop.public.payments__p0__000000240000-000000242190.jsonl"
+      ]
+    }
+  },
+  "run1": {
+    "run_id": 919040517881400,
+    "seconds": 141.6,
+    "started": "2026-11-17 08:41"
+  },
+  "run2": {
+    "run_id": 1016638311053652,
+    "seconds": 107.8,
+    "started": "2026-11-17 08:45"
+  },
+  "duplicate_copies": {
+    "customers": "dup__shop.public.customers__p0__000000000000-000000004999.jsonl (copy of shop.public.customers__p0__000000000000-000000004999.jsonl)",
+    "products": "dup__shop.public.products__p0__000000000000-000000004999.jsonl (copy of shop.public.products__p0__000000000000-000000004999.jsonl)",
+    "orders": "dup__shop.public.orders__p0__000000000000-000000004999.jsonl (copy of shop.public.orders__p0__000000000000-000000004999.jsonl)",
+    "order_items": "dup__shop.public.order_items__p0__000000000000-000000004999.jsonl (copy of shop.public.order_items__p0__000000000000-000000004999.jsonl)",
+    "payments": "dup__shop.public.payments__p0__000000000000-000000004999.jsonl (copy of shop.public.payments__p0__000000000000-000000004999.jsonl)"
+  },
+  "run3": {
+    "run_id": 605288312864005,
+    "seconds": 108.9,
+    "started": "2026-11-17 08:48"
+  },
+  "comparison": {
+    "customers": {
+      "rows": 30001,
+      "reference_rows": 30001,
+      "hash": "c9523f9729108c207c6db1b46407dee0c161106fdd2704584001b0554ded2bd8",
+      "reference_hash": "c9523f9729108c207c6db1b46407dee0c161106fdd2704584001b0554ded2bd8",
+      "identical": true
+    },
+    "products": {
+      "rows": 6855,
+      "reference_rows": 6855,
+      "hash": "6e723dde6d48f6ecc709c101dffe10221a383cddad855566f5fb44518b706b24",
+      "reference_hash": "6e723dde6d48f6ecc709c101dffe10221a383cddad855566f5fb44518b706b24",
+      "identical": true
+    },
+    "orders": {
+      "rows": 108971,
+      "reference_rows": 108971,
+      "hash": "c7ec089c92fb2015e7f859060fe0e56198bc450c01f4c0293e27229db2be3a58",
+      "reference_hash": "c7ec089c92fb2015e7f859060fe0e56198bc450c01f4c0293e27229db2be3a58",
+      "identical": true
+    },
+    "order_items": {
+      "rows": 271429,
+      "reference_rows": 271429,
+      "hash": "0b2d725abba947d63728c80813bb4df5bdd2d3a757318b354ad7a459b63f4a18",
+      "reference_hash": "0b2d725abba947d63728c80813bb4df5bdd2d3a757318b354ad7a459b63f4a18",
+      "identical": true
+    },
+    "payments": {
+      "rows": 108971,
+      "reference_rows": 108971,
+      "hash": "992d81c3d61941249e4be21d0f649419ad3d16f8f100030f8f7071efa088560d",
+      "reference_hash": "992d81c3d61941249e4be21d0f649419ad3d16f8f100030f8f7071efa088560d",
+      "identical": true
+    }
+  },
+  "ALL_IDENTICAL": true
+}

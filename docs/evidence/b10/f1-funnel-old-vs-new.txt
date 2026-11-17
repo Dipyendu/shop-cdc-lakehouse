@@ -1,0 +1,9 @@
+# Finding 1: order_status_funnel, old vs new (100,000-change run: analytics.shop_bronze / shop_silver)
+Old numbers: docs/evidence/b7-dbt-build.txt (16 Nov). New: dbt build on 17 Nov, docs/evidence/b10/f1-funnel-green.txt.
+Orders ever created (insert events in bronze): 11061; silver orders rows: 11061 of which purged (delete marks): 1413
+status | step | orders_now_in_status | old orders_reached_step | new orders_reached_step
+placed | 1 | 2774 | 9115 | 11061
+paid | 2 | 1065 | 6341 | 6849
+shipped | 3 | 838 | 5276 | 5276
+delivered | 4 | 4438 | 4438 | 4438
+cancelled | 9 | 533 | None | 1946

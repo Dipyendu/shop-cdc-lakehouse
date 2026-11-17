@@ -1,0 +1,18 @@
+version: 2
+sources:
+  - name: silver
+    database: "{{ env_var('SHOP_CATALOG', 'analytics') }}"
+    schema: "{{ var('silver_schema', 'shop_silver') }}"
+    tables:
+      - name: customers
+      - name: products
+      - name: orders
+      - name: order_items
+      - name: payments
+      - name: customers_history
+      - name: products_history
+  - name: bronze
+    database: "{{ env_var('SHOP_CATALOG', 'analytics') }}"
+    schema: "{{ var('bronze_schema', 'shop_bronze') }}"
+    tables:
+      - name: orders_events

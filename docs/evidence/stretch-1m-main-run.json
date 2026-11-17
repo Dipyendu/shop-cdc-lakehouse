@@ -1,0 +1,54 @@
+{
+  "generator_counts": {
+    "customers": {
+      "insert": 30001,
+      "update": 59156,
+      "delete": 4906
+    },
+    "products": {
+      "insert": 6855,
+      "update": 39504,
+      "delete": 0
+    },
+    "orders": {
+      "insert": 108971,
+      "update": 187259,
+      "delete": 14877
+    },
+    "order_items": {
+      "insert": 271429,
+      "update": 0,
+      "delete": 49728
+    },
+    "payments": {
+      "insert": 108971,
+      "update": 103466,
+      "delete": 14877
+    }
+  },
+  "expected_kafka_records": 1084388,
+  "resumed": "Generated, captured, landed and uploaded on 16 Nov 2026, 21:47-21:58 IST (docs/evidence/stretch-1m-local-state.txt); the Databricks job ran on 17 Nov after an overnight pause.",
+  "first_attempt_file_times_ist": {
+    "generator_report_written": "21:54:37",
+    "newest_landing_file_written": "21:54:47"
+  },
+  "landing_events": 1000000,
+  "clock_ist": {
+    "upload_start": "08:22:59",
+    "uploaded": "08:23:03",
+    "silver_done": "08:26:49"
+  },
+  "upload": {
+    "uploaded": 0,
+    "skipped_existing": 220
+  },
+  "job": {
+    "run_id": 202790818208971,
+    "seconds": 226.3,
+    "started": "2026-11-17 08:23"
+  },
+  "step_seconds": {
+    "upload_start -> uploaded": 3.8,
+    "uploaded -> silver_done": 226.4
+  }
+}

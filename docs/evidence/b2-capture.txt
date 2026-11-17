@@ -1,0 +1,30 @@
+# Capture proof — 2026-11-16 19:51 IST
+Stack: postgres:17.12-alpine, apache/kafka:4.3.2 (KRaft single node), quay.io/debezium/connect:3.7.1.Final; connector config connect/shop-postgres.json
+
+## Connector status
+{"name":"shop-postgres","connector":{"state":"RUNNING","worker_id":"172.18.0.4:8083","version":"3.7.1.Final"},"tasks":[{"id":0,"state":"RUNNING","worker_id":"172.18.0.4:8083","version":"3.7.1.Final"}],"type":"source"}
+
+## Topics (one per table, one partition each)
+Topic: shop.public.customers	PartitionCount: 1
+Topic: shop.public.products	PartitionCount: 1
+
+## SQL run in PostgreSQL
+insert into customers(customer_id,name,email,city,country) values (900001,'Demo User','demo@example.com','Kolkata','IN');
+update customers set email='demo2@example.com' where customer_id=900001;
+delete from customers where customer_id=900001;
+insert into products(product_id,name,category,price) values (900001,'Demo','books',1234.50);  -- decimal check
+
+## Events read back from Kafka topic shop.public.customers (offset, key, value)
+Offset:0	{"customer_id":900001}	{"before":null,"after":{"customer_id":900001,"name":"Demo User","email":"demo@example.com","city":"Kolkata","country":"IN","created_at":"2026-11-16T14:20:31.018481Z","updated_at":"2026-11-16T14:20:31.018481Z"},"source":{"version":"3.7.1.Final","connector":"postgresql","name":"shop","ts_ms":1794838831018,"snapshot":"false","db":"shop","sequence":"[null,\"26917616\"]","ts_us":1794838831018911,"ts_ns":1794838831018911000,"schema":"public","table":"customers","txId":760,"lsn":26917616,"xmin":null,"origin":null,"origin_lsn":null},"transaction":null,"op":"c","ts_ms":1794838831284,"ts_us":1794838831284009,"ts_ns":1794838831284009125}
+Offset:1	{"customer_id":900001}	{"before":null,"after":{"customer_id":900001,"name":"Demo User","email":"demo2@example.com","city":"Kolkata","country":"IN","created_at":"2026-11-16T14:20:31.018481Z","updated_at":"2026-11-16T14:20:31.097525Z"},"source":{"version":"3.7.1.Final","connector":"postgresql","name":"shop","ts_ms":1794838831097,"snapshot":"false","db":"shop","sequence":"[\"26917944\",\"26918000\"]","ts_us":1794838831097642,"ts_ns":1794838831097642000,"schema":"public","table":"customers","txId":761,"lsn":26918000,"xmin":null,"origin":null,"origin_lsn":null},"transaction":null,"op":"u","ts_ms":1794838831288,"ts_us":1794838831288330,"ts_ns":1794838831288330083}
+Offset:2	{"customer_id":900001}	{"before":{"customer_id":900001,"name":"","email":"","city":"","country":"","created_at":"1970-01-01T00:00:00.000000Z","updated_at":"1970-01-01T00:00:00.000000Z"},"after":null,"source":{"version":"3.7.1.Final","connector":"postgresql","name":"shop","ts_ms":1794838831172,"snapshot":"false","db":"shop","sequence":"[\"26918184\",\"26918240\"]","ts_us":1794838831172258,"ts_ns":1794838831172258000,"schema":"public","table":"customers","txId":762,"lsn":26918240,"xmin":null,"origin":null,"origin_lsn":null},"transaction":null,"op":"d","ts_ms":1794838831289,"ts_us":1794838831289369,"ts_ns":1794838831289369583}
+Offset:3	{"customer_id":900001}	null
+
+## shop.public.products (NUMERIC(10,2) arrives as the string "1234.50")
+{"before":null,"after":{"product_id":900001,"name":"Demo","category":"books","price":"1234.50","updated_at":"2026-11-16T14:20:31.236203Z"},"source":{"version":"3.7.1.Final","connector":"postgresql","name":"shop","ts_ms":1794838831236,"snapshot":"false","db":"shop","sequence":"[\"26918360\",\"26918360\"]","ts_us":1794838831236422,"ts_ns":1794838831236422000,"schema":"public","table":"products","txId":763,"lsn":26918360,"xmin":null,"origin":null,"origin_lsn":null},"transaction":null,"op":"c","ts_ms":1794838831293,"ts_us":1794838831293249,"ts_ns":1794838831293249958}
+
+## Notes
+- op c = insert, u = update, d = delete; the null value at offset 3 is the tombstone that follows a delete.
+- timestamptz arrives as io.debezium.time.ZonedTimestamp: ISO-8601 UTC string with microseconds (PostgreSQL's own precision).
+- decimal.handling.mode=string keeps NUMERIC exact, scale included.
+- Under REPLICA IDENTITY DEFAULT the delete's before image carries only the real primary key; the other NOT NULL fields are placeholder defaults ('' and 1970-01-01) and must be ignored.

@@ -1,0 +1,11 @@
+# Stretch 1M: local state after generate, capture and land — 2026-11-16 21:55 IST
+Steps (b6_main.py progress): generate 21:47:41 -> 21:54:37; Kafka caught up 21:54:37; landed 21:54:47 (block 5000).
+The script was stopped at 21:55 during the upload, before any Databricks job, to leave the workspace's shared daily compute quota to other work that evening; the job ran on 17 Nov.
+landing events: 1000000 in 220 files
+TOPIC committed CURRENT-OFFSET end LOG-END-OFFSET lag LAG
+shop.public.customers committed 98969 end 98969 lag 0
+shop.public.order_items committed 370885 end 370885 lag 0
+shop.public.orders committed 325984 end 325984 lag 0
+shop.public.payments committed 242191 end 242191 lag 0
+shop.public.products committed 46359 end 46359 lag 0
+total Kafka records 1084388 (1,000,000 events + 84,388 tombstones)

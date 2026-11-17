@@ -1,0 +1,9 @@
+uv run ruff check --output-format concise src tests jobs scripts
+All checks passed!
+uv run pytest -q
+............................                                             [100%]
+28 passed in 1.12s
+DATABRICKS_HOST=ci.invalid DATABRICKS_TOKEN="not-a-secret" SHOP_WAREHOUSE_HTTP_PATH=/ci uv run dbt parse --project-dir dbt --profiles-dir dbt
+[0m15:56:30  Running with dbt=1.12.6
+[0m15:56:32  Registered adapter: databricks=1.13.0
+[0m15:56:33  Performance info: dbt/target/perf_info.json

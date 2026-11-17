@@ -1,0 +1,13 @@
+# Final verification — started 2026-11-16 21:26 IST
+check | result | time IST | evidence
+1 make ci | PASS (exit 0; 28 passed) | 21:26:36 | docs/evidence/b9/1-make-ci.txt
+10 secret scan + planted proof | PASS | 21:26:36 | docs/evidence/b9/10-secret-scan.txt
+3 lander re-run | PASS (57 files identical; "files_unchanged": 57; no files written) | 21:26:44 | docs/evidence/b9/3-*.sha, docs/evidence/b9/3-lander-run1.json, docs/evidence/b9/3-lander-rerun.json
+4 reconciliation | PASS (exit 0) | 21:27:28 | docs/evidence/b9/4-reconcile.json
+7 history checks | PASS (exit 0; customer 1 has one extra version from the b8 latency update) | 21:27:39 | docs/evidence/b9/7-history.json
+5 replay | PASS | 21:30:35 | docs/evidence/b9/5-replay.json
+6 disorder + can-fail | PASS | 21:44:42 | docs/evidence/b9/6-disorder.json, docs/evidence/b9/6-disorder-canfail.json
+8 dbt build | PASS (PASS=23 WARN=0 ERROR=0) | 21:45:25 | docs/evidence/b9/8-dbt-build.txt
+2 capture c/u/d | PASS | 21:45:50 | docs/evidence/b9/2-capture.txt
+9 README links + EXPLAIN | PASS (all links resolve; 12 interview questions) | 21:45:50 | README.md, docs/EXPLAIN.md
+finished 2026-11-16 21:45 IST

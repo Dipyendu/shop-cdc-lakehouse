@@ -1,0 +1,124 @@
+{
+  "bronze_columns": [
+    [
+      "kafka_topic",
+      "string"
+    ],
+    [
+      "kafka_partition",
+      "int"
+    ],
+    [
+      "kafka_offset",
+      "bigint"
+    ],
+    [
+      "kafka_key",
+      "string"
+    ],
+    [
+      "payload",
+      "string"
+    ],
+    [
+      "op",
+      "string"
+    ],
+    [
+      "source_lsn",
+      "bigint"
+    ],
+    [
+      "source_tx_id",
+      "bigint"
+    ],
+    [
+      "source_ts",
+      "timestamp"
+    ],
+    [
+      "file_name",
+      "string"
+    ],
+    [
+      "ingested_at",
+      "timestamp"
+    ],
+    [
+      "# Clustering Information",
+      ""
+    ],
+    [
+      "# col_name",
+      "data_type"
+    ]
+  ],
+  "bronze_sample_rows": [
+    [
+      "shop.public.orders",
+      0,
+      0,
+      "c",
+      26944360,
+      764,
+      "2026-11-16 14:23:04.521258+00:00",
+      "shop.public.orders__p0__000000000000-000000001591.jsonl",
+      "{\"before\":null,\"after\":{\"order_id\":1,\"customer_id\":5,\"status\":\"placed\",\"ordered_at\":\"2026-11-16T14:23:04.403469Z\",\"updat"
+    ],
+    [
+      "shop.public.orders",
+      0,
+      1,
+      "u",
+      26946520,
+      764,
+      "2026-11-16 14:23:04.521258+00:00",
+      "shop.public.orders__p0__000000000000-000000001591.jsonl",
+      "{\"before\":null,\"after\":{\"order_id\":1,\"customer_id\":5,\"status\":\"paid\",\"ordered_at\":\"2026-11-16T14:23:04.403469Z\",\"updated"
+    ],
+    [
+      "shop.public.orders",
+      0,
+      2,
+      "u",
+      26946864,
+      764,
+      "2026-11-16 14:23:04.521258+00:00",
+      "shop.public.orders__p0__000000000000-000000001591.jsonl",
+      "{\"before\":null,\"after\":{\"order_id\":1,\"customer_id\":5,\"status\":\"shipped\",\"ordered_at\":\"2026-11-16T14:23:04.403469Z\",\"upda"
+    ]
+  ],
+  "redelivered_file": "redelivered2__shop.public.orders__p0__000000000000-000000001591.jsonl",
+  "redelivered_events": 1528,
+  "run": {
+    "run_id": 29845173677710,
+    "seconds": 53.8,
+    "started": "2026-11-16 20:22"
+  },
+  "before_bronze_rows_distinct_events_silver_rows": [
+    1528,
+    1528,
+    554
+  ],
+  "after_bronze_rows_distinct_events_silver_rows": [
+    1528,
+    1528,
+    554
+  ],
+  "bronze_rows_by_file_after": [
+    [
+      "shop.public.orders__p0__000000000000-000000001591.jsonl",
+      1528
+    ]
+  ],
+  "batch_log": [
+    [
+      2,
+      1528,
+      1528,
+      0,
+      "['redelivered2__shop.public.orders__p0__000000000000-000000001591.jsonl']"
+    ]
+  ],
+  "PASS": true
+}

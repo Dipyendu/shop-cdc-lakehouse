@@ -1,0 +1,33 @@
+{
+  "changed_key": 1,
+  "change": "city = city || ' (changed)' in analytics.shop_test.customers",
+  "result_on_tampered_copy": {
+    "source_rows": 2427,
+    "lake_rows": 2427,
+    "missing_in_lake": 0,
+    "extra_in_lake": 0,
+    "differing_rows": 1,
+    "examples": {
+      "missing": [],
+      "extra": [],
+      "differing": [
+        1
+      ]
+    },
+    "pass": false
+  },
+  "result_on_real_silver_table": {
+    "source_rows": 2427,
+    "lake_rows": 2427,
+    "missing_in_lake": 0,
+    "extra_in_lake": 0,
+    "differing_rows": 0,
+    "examples": {
+      "missing": [],
+      "extra": [],
+      "differing": []
+    },
+    "pass": true
+  },
+  "PASS": true
+}

@@ -1,0 +1,11 @@
+# Verification — started 2026-11-17 08:42 IST
+check | result | time IST | evidence
+1 make ci (37 passed) | PASS | 08:42:13 | docs/evidence/b10/1-make-ci.txt
+10 secret scan + planted proof | PASS | 08:42:13 | docs/evidence/b10/10-secret-scan.txt
+3 lander re-run (545 files, "files_unchanged": 545) | PASS | 08:42:43 | docs/evidence/b10/3-before.sha, docs/evidence/b10/3-after.sha, docs/evidence/b10/3-lander-rerun.json
+8 dbt build, 100,000-change tables (PASS=27 WARN=0 ERROR=0) | PASS | 08:43:13 | docs/evidence/b10/8-dbt-build-100k.txt
+8 dbt build, 1,000,000-change tables (PASS=27 WARN=0 ERROR=0) | PASS | 08:43:43 | docs/evidence/b10/8-dbt-build-1m.txt
+15 make connector twice (idempotent, curl -f) | PASS | 08:43:44 | docs/evidence/b10/2-connector-register.txt
+2 capture c/u/d (key 996224) | PASS | 08:43:54 | docs/evidence/b10/2-capture.txt
+9 README links resolve (all); EXPLAIN questions: 12 | PASS | 08:43:54 | README.md, docs/EXPLAIN.md
+finished 2026-11-17 08:43 IST

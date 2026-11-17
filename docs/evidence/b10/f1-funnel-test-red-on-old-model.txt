@@ -1,0 +1,25 @@
+02:53:18  Running with dbt=1.12.6
+02:53:21  Registered adapter: databricks=1.13.0
+02:53:21  Found 6 models, 18 data tests, 8 sources, 782 macros
+02:53:21  
+02:53:21  Concurrency: 8 threads (target='dev')
+02:53:21  
+02:53:33  1 of 4 START sql table model shop_marts.order_status_funnel .................... [RUN]
+02:53:47  1 of 4 OK created sql table model shop_marts.order_status_funnel ............... [OK in 13.45s]
+02:53:47  2 of 4 START test funnel_counts_every_order_ever_placed ........................ [RUN]
+02:53:47  3 of 4 START test not_null_order_status_funnel_status .......................... [RUN]
+02:53:47  4 of 4 START test unique_order_status_funnel_status ............................ [RUN]
+02:53:49  3 of 4 PASS not_null_order_status_funnel_status ................................ [PASS in 2.18s]
+02:53:49  4 of 4 PASS unique_order_status_funnel_status .................................. [PASS in 2.35s]
+02:53:49  2 of 4 FAIL 1 funnel_counts_every_order_ever_placed ............................ [FAIL 1 in 2.82s]
+02:53:49  
+02:53:49  Finished running 1 table model, 3 data tests in 0 hours 0 minutes and 27.87 seconds (27.87s).
+02:53:49  
+02:53:49  Completed with 1 error, 0 partial successes, and 0 warnings:
+02:53:49  
+02:53:49  [ERROR]: in test funnel_counts_every_order_ever_placed (tests/funnel_counts_every_order_ever_placed.sql)
+02:53:49    Got 1 result, configured to fail if != 0
+02:53:49  
+02:53:49    compiled code at target/compiled/shop_marts/tests/funnel_counts_every_order_ever_placed.sql
+02:53:49  
+02:53:49  Done. PASS=3 WARN=0 ERROR=1 SKIP=0 NO-OP=0 REUSED=0 TOTAL=4

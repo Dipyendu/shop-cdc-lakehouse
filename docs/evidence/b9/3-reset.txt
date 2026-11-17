@@ -1,0 +1,7 @@
+
+GROUP           TOPIC                   PARTITION  NEW-OFFSET
+shop-lander-b9  shop.public.orders      0          0
+shop-lander-b9  shop.public.order_items 0          0
+shop-lander-b9  shop.public.products    0          0
+shop-lander-b9  shop.public.payments    0          0
+shop-lander-b9  shop.public.customers   0          0

@@ -1,0 +1,5 @@
+# Project configuration, read by src/shop/config.py, the Makefile (bundle variables) and the
+# setup script. LANDING_ROOT is named only here.
+catalog = "analytics"
+landing_root = "/Volumes/analytics/shop_landing/landing"
+checkpoints = "/Volumes/analytics/shop_landing/checkpoints"

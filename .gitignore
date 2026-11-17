@@ -1,0 +1,30 @@
+# secrets
+.env*
+*.env
+.databrickscfg
+*.tfstate
+*.tfstate.*
+.terraform/
+# python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+# local data
+landing/
+data/
+# dbt
+dbt/target/
+dbt/logs/
+dbt/dbt_packages/
+logs/
+# databricks bundles
+.databricks/
+.DS_Store
+t5_files/
+disorder_stage/
+dbt/.user.yml
+landing_b9/
+landing_100k/
+conf/local.env

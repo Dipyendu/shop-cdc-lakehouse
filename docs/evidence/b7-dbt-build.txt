@@ -1,0 +1,44 @@
+# dbt build — 2026-11-16 21:09 IST
+Command: scripts/with-secrets.sh uv run dbt build --project-dir dbt --profiles-dir dbt  (dbt-core 1.12.6, dbt-databricks 1.13.0, target analytics.shop_marts)
+
+15:39:08  1 of 23 OK created sql view model shop_marts.stg_customers_history ............. [OK in 2.18s]
+15:39:08  2 of 23 OK created sql view model shop_marts.stg_order_items ................... [OK in 2.38s]
+15:39:10  3 of 23 OK created sql view model shop_marts.stg_orders ........................ [OK in 2.25s]
+15:39:11  4 of 23 PASS not_null_stg_order_items_order_id ................................. [PASS in 2.39s]
+15:39:12  5 of 23 PASS not_null_stg_order_items_order_item_id ............................ [PASS in 1.94s]
+15:39:13  6 of 23 PASS unique_stg_order_items_order_item_id .............................. [PASS in 1.92s]
+15:39:16  8 of 23 PASS not_null_stg_orders_created_lsn ................................... [PASS in 2.98s]
+15:39:16  7 of 23 PASS each_order_matches_one_customer_version ........................... [PASS in 3.35s]
+15:39:18  10 of 23 PASS not_null_stg_orders_order_id ..................................... [PASS in 2.13s]
+15:39:18  9 of 23 PASS not_null_stg_orders_customer_id ................................... [PASS in 2.31s]
+15:39:20  11 of 23 PASS relationships_stg_order_items_order_id__order_id__ref_stg_orders_  [PASS in 2.42s]
+15:39:22  12 of 23 PASS relationships_stg_orders_customer_id__customer_id__ref_stg_customers_history_  [PASS in 3.84s]
+15:39:23  13 of 23 PASS unique_stg_orders_order_id ....................................... [PASS in 2.93s]
+15:39:30  15 of 23 OK created sql table model shop_marts.order_status_funnel ............. [OK in 6.40s]
+15:39:30  14 of 23 OK created sql table model shop_marts.daily_revenue ................... [OK in 6.93s]
+15:39:32  17 of 23 PASS not_null_order_status_funnel_status .............................. [PASS in 1.95s]
+15:39:34  18 of 23 PASS unique_order_status_funnel_status ................................ [PASS in 2.35s]
+15:39:35  16 of 23 OK created sql table model shop_marts.revenue_by_customer_attributes .. [OK in 5.39s]
+15:39:36  19 of 23 PASS not_null_daily_revenue_order_date ................................ [PASS in 1.91s]
+15:39:37  20 of 23 PASS unique_daily_revenue_order_date .................................. [PASS in 1.93s]
+15:39:38  21 of 23 PASS not_null_revenue_by_customer_attributes_country .................. [PASS in 2.14s]
+15:39:39  22 of 23 PASS revenue_by_attributes_unique_country_city ........................ [PASS in 1.98s]
+15:39:41  23 of 23 PASS revenue_totals_agree ............................................. [PASS in 2.27s]
+15:39:41  Completed successfully
+15:39:41  Done. PASS=23 WARN=0 ERROR=0 SKIP=0 NO-OP=0 REUSED=0 TOTAL=23
+
+## Mart samples
+SELECT * FROM analytics.shop_marts.daily_revenue ORDER BY 1
+   (datetime.date(2026, 11, 16), 9115, Decimal('24431210.92'))
+SELECT * FROM analytics.shop_marts.order_status_funnel ORDER BY step
+   ('placed', 1, 2774, 9115)
+   ('paid', 2, 1065, 6341)
+   ('shipped', 3, 838, 5276)
+   ('delivered', 4, 4438, 4438)
+   ('cancelled', 9, 533, None)
+SELECT * FROM analytics.shop_marts.revenue_by_customer_attributes ORDER BY revenue DESC LIMIT 5
+   ('DE', 'Berlin', 998, Decimal('2645846.15'))
+   ('GB', 'London', 969, Decimal('2618323.94'))
+   ('FR', 'Paris', 940, Decimal('2610149.08'))
+   ('IN', 'Mumbai', 1002, Decimal('2598732.71'))
+   ('CA', 'Toronto', 928, Decimal('2549316.31'))

@@ -1,0 +1,54 @@
+{
+  "generator_counts": {
+    "customers": {
+      "insert": 2924,
+      "update": 5779,
+      "delete": 497
+    },
+    "products": {
+      "insert": 658,
+      "update": 3916,
+      "delete": 0
+    },
+    "orders": {
+      "insert": 11061,
+      "update": 18509,
+      "delete": 1413
+    },
+    "order_items": {
+      "insert": 27705,
+      "update": 0,
+      "delete": 4814
+    },
+    "payments": {
+      "insert": 11061,
+      "update": 10250,
+      "delete": 1413
+    }
+  },
+  "expected_kafka_records": 108137,
+  "resumed": "The first attempt (started about 20:24 IST) generated, captured and landed all events, then hung for about 33 minutes inside the upload on a request with no timeout. It was stopped, the upload got timeouts and bounded retries, and this run resumed at the upload (repeat-safe).",
+  "first_attempt_file_times_ist": {
+    "generator_report_written": "20:25:53",
+    "newest_landing_file_written": "20:25:57"
+  },
+  "landing_events": 100000,
+  "clock_ist": {
+    "upload_start": "21:00:46",
+    "uploaded": "21:01:39",
+    "silver_done": "21:05:03"
+  },
+  "upload": {
+    "uploaded": 89,
+    "skipped_existing": 22
+  },
+  "job": {
+    "run_id": 241127120302279,
+    "seconds": 203.7,
+    "started": "2026-11-16 21:01"
+  },
+  "step_seconds": {
+    "upload_start -> uploaded": 53.5,
+    "uploaded -> silver_done": 203.7
+  }
+}

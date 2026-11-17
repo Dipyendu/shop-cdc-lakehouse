@@ -1,0 +1,52 @@
+# Databricks Asset Bundle for the lakehouse side. Deploy: make deploy
+# landing_root is passed in from conf/shop.toml by the Makefile (one source).
+bundle:
+  name: shop-cdc-lakehouse
+
+variables:
+  catalog:
+    default: analytics
+  landing_root:
+    description: LANDING_ROOT from conf/shop.toml
+  bronze:
+    default: shop_bronze
+  silver:
+    default: shop_silver
+  checkpoints:
+    default: /Volumes/analytics/shop_landing/checkpoints
+
+targets:
+  dev:
+    default: true
+    mode: development
+
+resources:
+  jobs:
+    shop_pipeline:
+      name: shop_pipeline
+      max_concurrent_runs: 2
+      environments:
+        - environment_key: default
+          spec:
+            environment_version: "4"
+      tasks:
+        - task_key: bronze_silver
+          environment_key: default
+          spark_python_task:
+            python_file: ./jobs/pipeline.py
+            parameters:
+              - --catalog=${var.catalog}
+              - --bronze=${var.bronze}
+              - --silver=${var.silver}
+              - --landing=${var.landing_root}/shop
+              - --checkpoints=${var.checkpoints}/${var.bronze}
+        - task_key: history
+          depends_on:
+            - task_key: bronze_silver
+          environment_key: default
+          spark_python_task:
+            python_file: ./jobs/history.py
+            parameters:
+              - --catalog=${var.catalog}
+              - --bronze=${var.bronze}
+              - --silver=${var.silver}

@@ -1,0 +1,68 @@
+[0m03:13:15  Running with dbt=1.12.6
+[0m03:13:18  Registered adapter: databricks=1.13.0
+[0m03:13:18  Unable to do partial parsing because config vars, config profile, or config target have changed
+[0m03:13:18  Unable to do partial parsing because profile has changed
+[0m03:13:19  Found 7 models, 20 data tests, 8 sources, 782 macros
+[0m03:13:19  
+[0m03:13:19  Concurrency: 8 threads (target='dev')
+[0m03:13:19  
+[0m03:13:27  2 of 27 START sql view model shop_1m_marts.stg_order_items ..................... [RUN]
+[0m03:13:27  1 of 27 START sql view model shop_1m_marts.stg_customers_history ............... [RUN]
+[0m03:13:27  3 of 27 START sql view model shop_1m_marts.stg_order_steps ..................... [RUN]
+[0m03:13:27  4 of 27 START sql view model shop_1m_marts.stg_orders .......................... [RUN]
+[0m03:13:29  1 of 27 OK created sql view model shop_1m_marts.stg_customers_history .......... [[32mOK[0m in 2.15s]
+[0m03:13:29  3 of 27 OK created sql view model shop_1m_marts.stg_order_steps ................ [[32mOK[0m in 2.15s]
+[0m03:13:29  2 of 27 OK created sql view model shop_1m_marts.stg_order_items ................ [[32mOK[0m in 2.16s]
+[0m03:13:29  4 of 27 OK created sql view model shop_1m_marts.stg_orders ..................... [[32mOK[0m in 2.17s]
+[0m03:13:29  5 of 27 START test each_order_matches_one_customer_version ..................... [RUN]
+[0m03:13:29  6 of 27 START test not_null_stg_order_items_order_id ........................... [RUN]
+[0m03:13:29  7 of 27 START test not_null_stg_order_items_order_item_id ...................... [RUN]
+[0m03:13:29  8 of 27 START test not_null_stg_order_steps_order_id ........................... [RUN]
+[0m03:13:29  9 of 27 START test not_null_stg_orders_created_lsn ............................. [RUN]
+[0m03:13:29  10 of 27 START test not_null_stg_orders_customer_id ............................ [RUN]
+[0m03:13:29  11 of 27 START test not_null_stg_orders_order_id ............................... [RUN]
+[0m03:13:29  12 of 27 START test relationships_stg_order_items_order_id__order_id__ref_stg_orders_  [RUN]
+[0m03:13:32  11 of 27 PASS not_null_stg_orders_order_id ..................................... [[32mPASS[0m in 2.63s]
+[0m03:13:32  13 of 27 START test relationships_stg_orders_customer_id__customer_id__ref_stg_customers_history_  [RUN]
+[0m03:13:32  7 of 27 PASS not_null_stg_order_items_order_item_id ............................ [[32mPASS[0m in 2.65s]
+[0m03:13:32  14 of 27 START test unique_stg_order_items_order_item_id ....................... [RUN]
+[0m03:13:32  6 of 27 PASS not_null_stg_order_items_order_id ................................. [[32mPASS[0m in 2.71s]
+[0m03:13:32  10 of 27 PASS not_null_stg_orders_customer_id .................................. [[32mPASS[0m in 2.71s]
+[0m03:13:32  15 of 27 START test unique_stg_order_steps_order_id ............................ [RUN]
+[0m03:13:32  16 of 27 START test unique_stg_orders_order_id ................................. [RUN]
+[0m03:13:32  8 of 27 PASS not_null_stg_order_steps_order_id ................................. [[32mPASS[0m in 3.07s]
+[0m03:13:33  9 of 27 PASS not_null_stg_orders_created_lsn ................................... [[32mPASS[0m in 3.17s]
+[0m03:13:33  12 of 27 PASS relationships_stg_order_items_order_id__order_id__ref_stg_orders_  [[32mPASS[0m in 3.22s]
+[0m03:13:33  5 of 27 PASS each_order_matches_one_customer_version ........................... [[32mPASS[0m in 3.28s]
+[0m03:13:34  15 of 27 PASS unique_stg_order_steps_order_id .................................. [[32mPASS[0m in 1.80s]
+[0m03:13:34  14 of 27 PASS unique_stg_order_items_order_item_id ............................. [[32mPASS[0m in 1.85s]
+[0m03:13:34  16 of 27 PASS unique_stg_orders_order_id ....................................... [[32mPASS[0m in 1.93s]
+[0m03:13:34  17 of 27 START sql table model shop_1m_marts.daily_revenue ..................... [RUN]
+[0m03:13:34  18 of 27 START sql table model shop_1m_marts.order_status_funnel ............... [RUN]
+[0m03:13:34  13 of 27 PASS relationships_stg_orders_customer_id__customer_id__ref_stg_customers_history_  [[32mPASS[0m in 2.18s]
+[0m03:13:34  19 of 27 START sql table model shop_1m_marts.revenue_by_customer_attributes .... [RUN]
+[0m03:13:39  17 of 27 OK created sql table model shop_1m_marts.daily_revenue ................ [[32mOK[0m in 4.66s]
+[0m03:13:39  20 of 27 START test not_null_daily_revenue_order_date .......................... [RUN]
+[0m03:13:39  21 of 27 START test unique_daily_revenue_order_date ............................ [RUN]
+[0m03:13:39  19 of 27 OK created sql table model shop_1m_marts.revenue_by_customer_attributes  [[32mOK[0m in 4.79s]
+[0m03:13:39  22 of 27 START test not_null_revenue_by_customer_attributes_country ............ [RUN]
+[0m03:13:39  23 of 27 START test revenue_by_attributes_unique_country_city .................. [RUN]
+[0m03:13:39  24 of 27 START test revenue_totals_agree ....................................... [RUN]
+[0m03:13:40  18 of 27 OK created sql table model shop_1m_marts.order_status_funnel .......... [[32mOK[0m in 5.52s]
+[0m03:13:40  25 of 27 START test funnel_counts_every_order_ever_placed ...................... [RUN]
+[0m03:13:40  26 of 27 START test not_null_order_status_funnel_status ........................ [RUN]
+[0m03:13:40  27 of 27 START test unique_order_status_funnel_status .......................... [RUN]
+[0m03:13:41  20 of 27 PASS not_null_daily_revenue_order_date ................................ [[32mPASS[0m in 1.83s]
+[0m03:13:41  21 of 27 PASS unique_daily_revenue_order_date .................................. [[32mPASS[0m in 1.90s]
+[0m03:13:41  22 of 27 PASS not_null_revenue_by_customer_attributes_country .................. [[32mPASS[0m in 1.81s]
+[0m03:13:41  23 of 27 PASS revenue_by_attributes_unique_country_city ........................ [[32mPASS[0m in 1.87s]
+[0m03:13:41  24 of 27 PASS revenue_totals_agree ............................................. [[32mPASS[0m in 1.98s]
+[0m03:13:41  26 of 27 PASS not_null_order_status_funnel_status .............................. [[32mPASS[0m in 1.81s]
+[0m03:13:41  27 of 27 PASS unique_order_status_funnel_status ................................ [[32mPASS[0m in 1.89s]
+[0m03:13:42  25 of 27 PASS funnel_counts_every_order_ever_placed ............................ [[32mPASS[0m in 2.13s]
+[0m03:13:42  
+[0m03:13:42  Finished running 3 table models, 20 data tests, 4 view models in 0 hours 0 minutes and 22.67 seconds (22.67s).
+[0m03:13:42  
+[0m03:13:42  [32mCompleted successfully[0m
+[0m03:13:42  
+[0m03:13:42  Done. PASS=27 WARN=0 ERROR=0 SKIP=0 NO-OP=0 REUSED=0 TOTAL=27

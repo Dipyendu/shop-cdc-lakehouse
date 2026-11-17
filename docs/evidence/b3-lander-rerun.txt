@@ -1,0 +1,48 @@
+# Lander re-run proof — 2026-11-16 19:53 IST
+Data: 5,000 generator events (seed 42) + 4 demo events from the capture proof, captured by Debezium. Block size 2000 offsets.
+
+## Run 1 (consumer group shop-lander, committed offsets were empty)
+(summary printed by run 1: events_read 5412, events_in_files 5004, files_written 5, tombstones_skipped 408)
+
+## Files and SHA-256 after run 1
+c82158f768116c6aad584e149c238f948462772e59c1ff588d7e2c03b599ae8a  ./customers/shop.public.customers__p0__000000000000-000000000500.jsonl
+523d5e4086354bee3a9356a24cfe558c9af57396db1f1f7b0bc4687aa9ea4df2  ./order_items/shop.public.order_items__p0__000000000000-000000001882.jsonl
+ba59131522236b5ae2046b9cc50cd46c0c4501475d44134e10d80d1e5165bc8a  ./orders/shop.public.orders__p0__000000000000-000000001591.jsonl
+c737343a36666d48217724d581840e67f1c715f038c037235a63e97a6f1c8ba1  ./payments/shop.public.payments__p0__000000000000-000000001196.jsonl
+aa5fe7701aff16fa530a77d64e59b642e301b0e5b323b005d9d9ee11fccc8f97  ./products/shop.public.products__p0__000000000000-000000000237.jsonl
+
+## Reset group offsets to earliest
+
+GROUP           TOPIC                   PARTITION  NEW-OFFSET
+shop-lander     shop.public.orders      0          0
+shop-lander     shop.public.order_items 0          0
+shop-lander     shop.public.products    0          0
+shop-lander     shop.public.payments    0          0
+shop-lander     shop.public.customers   0          0
+
+## Run 2 over the same offsets
+{
+  "partitions": 5,
+  "events_in_files": 5004,
+  "events_read": 5412,
+  "files_unchanged": 5,
+  "tombstones_skipped": 408
+}
+
+## Files and SHA-256 after run 2
+c82158f768116c6aad584e149c238f948462772e59c1ff588d7e2c03b599ae8a  ./customers/shop.public.customers__p0__000000000000-000000000500.jsonl
+523d5e4086354bee3a9356a24cfe558c9af57396db1f1f7b0bc4687aa9ea4df2  ./order_items/shop.public.order_items__p0__000000000000-000000001882.jsonl
+ba59131522236b5ae2046b9cc50cd46c0c4501475d44134e10d80d1e5165bc8a  ./orders/shop.public.orders__p0__000000000000-000000001591.jsonl
+c737343a36666d48217724d581840e67f1c715f038c037235a63e97a6f1c8ba1  ./payments/shop.public.payments__p0__000000000000-000000001196.jsonl
+aa5fe7701aff16fa530a77d64e59b642e301b0e5b323b005d9d9ee11fccc8f97  ./products/shop.public.products__p0__000000000000-000000000237.jsonl
+
+## Comparison
+IDENTICAL: same 5 files, same names, same bytes, no extra files
+
+## Committed offsets after run 2 (lag must be 0)
+TOPIC CURRENT-OFFSET LOG-END-OFFSET LAG
+shop.public.customers 501 501 0
+shop.public.order_items 1884 1884 0
+shop.public.orders 1592 1592 0
+shop.public.payments 1197 1197 0
+shop.public.products 238 238 0

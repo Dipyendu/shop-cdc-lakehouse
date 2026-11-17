@@ -1,0 +1,57 @@
+version: 2
+models:
+  - name: stg_orders
+    description: Live orders from silver (delete marks removed), with the log position of each order's insert event.
+    columns:
+      - name: order_id
+        description: Primary key.
+        data_tests: [unique, not_null]
+      - name: created_lsn
+        description: PostgreSQL log position of the order's insert, used for the "as at order time" join.
+        data_tests: [not_null]
+      - name: customer_id
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_customers_history')
+                field: customer_id
+  - name: stg_order_items
+    description: Live order lines from silver, with line_amount = quantity * unit_price.
+    columns:
+      - name: order_item_id
+        description: Primary key.
+        data_tests: [unique, not_null]
+      - name: order_id
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_orders')
+                field: order_id
+  - name: stg_customers_history
+    description: Customer versions (SCD type 2) from silver.
+  - name: stg_order_steps
+    description: One row per order ever created (live, cancelled or purged), with the highest funnel step it reached and whether it was ever cancelled, from the order events in bronze.
+    columns:
+      - name: order_id
+        data_tests: [unique, not_null]
+  - name: daily_revenue
+    description: Revenue per order day from the lines of live orders that are not cancelled. Full table rebuild.
+    columns:
+      - name: order_date
+        data_tests: [unique, not_null]
+  - name: order_status_funnel
+    description: Live orders per status now, and orders that ever reached each step (from bronze events). Full table rebuild.
+    columns:
+      - name: status
+        data_tests: [unique, not_null]
+      - name: orders_now_in_status
+        description: Live orders whose current status is this one.
+      - name: orders_reached_step
+        description: Orders that ever reached this step, cancelled and purged orders included; for 'cancelled', orders that were ever cancelled.
+  - name: revenue_by_customer_attributes
+    description: Revenue by the customer's country and city as they were when each order was inserted (join on log position to the history version). Full table rebuild.
+    columns:
+      - name: country
+        data_tests: [not_null]

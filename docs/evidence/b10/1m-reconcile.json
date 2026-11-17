@@ -1,0 +1,73 @@
+{
+  "customers": {
+    "table": "analytics.shop_1m_silver.customers",
+    "source_rows": 25095,
+    "lake_rows": 25095,
+    "missing_in_lake": 0,
+    "extra_in_lake": 0,
+    "differing_rows": 0,
+    "examples": {
+      "missing": [],
+      "extra": [],
+      "differing": []
+    },
+    "pass": true
+  },
+  "products": {
+    "table": "analytics.shop_1m_silver.products",
+    "source_rows": 6855,
+    "lake_rows": 6855,
+    "missing_in_lake": 0,
+    "extra_in_lake": 0,
+    "differing_rows": 0,
+    "examples": {
+      "missing": [],
+      "extra": [],
+      "differing": []
+    },
+    "pass": true
+  },
+  "orders": {
+    "table": "analytics.shop_1m_silver.orders",
+    "source_rows": 94094,
+    "lake_rows": 94094,
+    "missing_in_lake": 0,
+    "extra_in_lake": 0,
+    "differing_rows": 0,
+    "examples": {
+      "missing": [],
+      "extra": [],
+      "differing": []
+    },
+    "pass": true
+  },
+  "order_items": {
+    "table": "analytics.shop_1m_silver.order_items",
+    "source_rows": 221701,
+    "lake_rows": 221701,
+    "missing_in_lake": 0,
+    "extra_in_lake": 0,
+    "differing_rows": 0,
+    "examples": {
+      "missing": [],
+      "extra": [],
+      "differing": []
+    },
+    "pass": true
+  },
+  "payments": {
+    "table": "analytics.shop_1m_silver.payments",
+    "source_rows": 94094,
+    "lake_rows": 94094,
+    "missing_in_lake": 0,
+    "extra_in_lake": 0,
+    "differing_rows": 0,
+    "examples": {
+      "missing": [],
+      "extra": [],
+      "differing": []
+    },
+    "pass": true
+  },
+  "ALL_PASS": true
+}

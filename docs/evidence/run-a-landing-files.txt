@@ -1,0 +1,32 @@
+# Run A landing files in the volume (prefix shop), listed 2026-11-17 11:11 IST
+# Command: Files API list_directory_contents(LANDING_ROOT/shop/<table>); offsets per file = last - first + 1
+
+## customers: 11 files
+first files: shop.public.customers__p0__000000000000-000000000999.jsonl, shop.public.customers__p0__000000001000-000000001998.jsonl, shop.public.customers__p0__000000002000-000000002999.jsonl
+file start offsets that are not multiples of 1000: [9697]
+largest offset span in one file: 1000
+
+## products: 5 files
+first files: shop.public.products__p0__000000000000-000000000999.jsonl, shop.public.products__p0__000000001000-000000001999.jsonl, shop.public.products__p0__000000002000-000000002999.jsonl
+file start offsets that are not multiples of 1000: []
+largest offset span in one file: 1000
+
+## orders: 33 files
+first files: shop.public.orders__p0__000000000000-000000000999.jsonl, shop.public.orders__p0__000000001000-000000001999.jsonl, shop.public.orders__p0__000000002000-000000002999.jsonl
+file start offsets that are not multiples of 1000: [6001, 14001]
+largest offset span in one file: 1000
+
+## order_items: 38 files
+first files: shop.public.order_items__p0__000000000000-000000000999.jsonl, shop.public.order_items__p0__000000001000-000000001999.jsonl, shop.public.order_items__p0__000000002000-000000002999.jsonl
+file start offsets that are not multiples of 1000: [9001, 12001, 13001, 25001]
+largest offset span in one file: 1000
+
+## payments: 25 files
+first files: shop.public.payments__p0__000000000000-000000000999.jsonl, shop.public.payments__p0__000000001000-000000001999.jsonl, shop.public.payments__p0__000000002000-000000002999.jsonl
+file start offsets that are not multiples of 1000: [8001, 9001, 13001]
+largest offset span in one file: 1000
+
+Total files: 112
+
+# Reading: 112 files = Run A's 111 files plus the one customers file of the latency test (b8-latency.json: upload uploaded 1, skipped_existing 111), which starts at offset 9697.
+# Every file spans at most 1,000 offsets and blocks start at multiples of 1,000; a start of n*1000+1 means the record at n*1000 was a tombstone, which the lander skips. So Run A was landed with --block 1000.

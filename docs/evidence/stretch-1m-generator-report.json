@@ -1,0 +1,37 @@
+{
+  "seed": 42,
+  "events": 1000000,
+  "applied": true,
+  "by_table": {
+    "customers": {
+      "insert": 30001,
+      "update": 59156,
+      "delete": 4906
+    },
+    "products": {
+      "insert": 6855,
+      "update": 39504,
+      "delete": 0
+    },
+    "orders": {
+      "insert": 108971,
+      "update": 187259,
+      "delete": 14877
+    },
+    "order_items": {
+      "insert": 271429,
+      "update": 0,
+      "delete": 49728
+    },
+    "payments": {
+      "insert": 108971,
+      "update": 103466,
+      "delete": 14877
+    }
+  },
+  "by_op": {
+    "insert": 526227,
+    "update": 389385,
+    "delete": 84388
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "changed": {
+    "customer_id": 1,
+    "email": "latency.1794844390@example.com"
+  },
+  "silver_email": "latency.1794844390@example.com",
+  "in_silver": true,
+  "committed_at_ist": "2026-11-16 21:23:10",
+  "step_seconds": {
+    "committed -> in_kafka": 0.45,
+    "in_kafka -> landed": 0.13,
+    "landed -> uploaded": 5.75,
+    "uploaded -> job_done": 63.35,
+    "job_done -> checked": 4.83
+  },
+  "end_to_end_seconds_commit_to_silver": 69.7,
+  "lander": {
+    "partitions": 1,
+    "events_in_files": 1,
+    "events_read": 1,
+    "files_written": 1
+  },
+  "upload": {
+    "uploaded": 1,
+    "skipped_existing": 111
+  },
+  "job": {
+    "run_id": 186908203169593,
+    "seconds": 63.3,
+    "started": "2026-11-16 21:23"
+  }
+}

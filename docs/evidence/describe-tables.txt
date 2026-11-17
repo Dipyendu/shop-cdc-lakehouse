@@ -1,0 +1,119 @@
+# DESCRIBE TABLE output, catalog analytics, taken 2026-11-17 11:10 IST
+# Command per table: DESCRIBE TABLE <catalog>.<schema>.<table>; columns: col_name | data_type
+
+## analytics.shop_silver.customers
+customer_id | bigint
+name | string
+email | string
+city | string
+country | string
+created_at | timestamp
+updated_at | timestamp
+_lsn | bigint
+_deleted | boolean
+_source_ts | timestamp
+
+## analytics.shop_silver.products
+product_id | bigint
+name | string
+category | string
+price | decimal(10,2)
+updated_at | timestamp
+_lsn | bigint
+_deleted | boolean
+_source_ts | timestamp
+
+## analytics.shop_silver.orders
+order_id | bigint
+customer_id | bigint
+status | string
+ordered_at | timestamp
+updated_at | timestamp
+_lsn | bigint
+_deleted | boolean
+_source_ts | timestamp
+
+## analytics.shop_silver.order_items
+order_item_id | bigint
+order_id | bigint
+product_id | bigint
+quantity | int
+unit_price | decimal(10,2)
+updated_at | timestamp
+_lsn | bigint
+_deleted | boolean
+_source_ts | timestamp
+
+## analytics.shop_silver.payments
+payment_id | bigint
+order_id | bigint
+amount | decimal(12,2)
+method | string
+status | string
+updated_at | timestamp
+_lsn | bigint
+_deleted | boolean
+_source_ts | timestamp
+
+## analytics.shop_silver.customers_history
+customer_id | bigint
+name | string
+email | string
+city | string
+country | string
+valid_from | timestamp
+valid_to | timestamp
+valid_from_lsn | bigint
+valid_to_lsn | bigint
+is_current | boolean
+
+## analytics.shop_silver.products_history
+product_id | bigint
+name | string
+category | string
+price | decimal(10,2)
+valid_from | timestamp
+valid_to | timestamp
+valid_from_lsn | bigint
+valid_to_lsn | bigint
+is_current | boolean
+
+## analytics.shop_marts.daily_revenue
+order_date | date
+orders | bigint
+revenue | decimal(31,2)
+
+## analytics.shop_marts.order_status_funnel
+status | string
+step | int
+orders_now_in_status | bigint
+orders_reached_step | bigint
+
+## analytics.shop_marts.revenue_by_customer_attributes
+country | string
+city | string
+orders | bigint
+revenue | decimal(31,2)
+
+## analytics.shop_bronze.orders_events
+kafka_topic | string
+kafka_partition | int
+kafka_offset | bigint
+kafka_key | string
+payload | string
+op | string
+source_lsn | bigint
+source_tx_id | bigint
+source_ts | timestamp
+file_name | string
+ingested_at | timestamp
+
+## analytics.shop_bronze._batch_log
+table | string
+batch_id | bigint
+events_in_batch | bigint
+distinct_events | bigint
+bronze_rows_added | bigint
+files | array<string>
+require_newer | boolean
+logged_at | timestamp

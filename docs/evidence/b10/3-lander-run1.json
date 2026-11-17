@@ -1,0 +1,7 @@
+{
+  "partitions": 5,
+  "events_in_files": 1000000,
+  "events_read": 1084388,
+  "files_written": 545,
+  "tombstones_skipped": 84388
+}

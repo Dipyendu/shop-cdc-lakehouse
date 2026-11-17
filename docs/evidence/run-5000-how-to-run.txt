@@ -1,0 +1,1150 @@
+# Evidence: the README "How to run" block, then the docs/DOCUMENTATION.md section 7 proof block, run once in order as printed
+# from an empty PostgreSQL database and an empty Unity Catalog catalog (conf/shop.toml pointed at catalog shop_demo for this run only).
+# <catalog> in the reconcile command is shop_demo. The deploy output's workspace user folder is shown as <user>; ANSI colours removed.
+# 5,000-event run from an empty database and an empty catalog (shop_demo), 2026-11-17 
+
+$ uv sync --locked
+# started 11:16:56 IST
+Resolved 89 packages in 19ms
+Checked 87 packages in 17ms
+# exit 0 at 11:16:56 IST
+
+$ scripts/with-secrets.sh uv run python scripts/setup_databricks.py
+# started 11:16:56 IST
+created schema shop_demo.shop_landing
+created volume /Volumes/shop_demo/shop_landing/landing
+ok: /Volumes/shop_demo/shop_landing/landing
+created volume /Volumes/shop_demo/shop_landing/checkpoints
+ok: /Volumes/shop_demo/shop_landing/checkpoints
+# exit 0 at 11:17:01 IST
+
+$ make up
+# started 11:17:01 IST
+System-wide memory free percentage: 43%
+docker compose -p shopcdc up -d
+ Network shopcdc_default Creating 
+ Network shopcdc_default Creating 
+ Volume shopcdc_kafkadata Creating 
+ Volume shopcdc_kafkadata Creating 
+ Volume shopcdc_pgdata Creating 
+ Volume shopcdc_pgdata Creating 
+ Volume shopcdc_kafkadata Created 
+ Volume shopcdc_kafkadata Created 
+ Volume shopcdc_pgdata Created 
+ Volume shopcdc_pgdata Created 
+ Network shopcdc_default Created 
+ Network shopcdc_default Created 
+ Container shopcdc-kafka-1 Creating 
+ Container shopcdc-postgres-1 Creating 
+ Container shopcdc-postgres-1 Created 
+ Container shopcdc-kafka-1 Created 
+ Container shopcdc-connect-1 Creating 
+ Container shopcdc-connect-1 Created 
+ Container shopcdc-kafka-1 Starting 
+ Container shopcdc-postgres-1 Starting 
+ Container shopcdc-kafka-1 Started 
+ Container shopcdc-postgres-1 Started 
+ Container shopcdc-connect-1 Starting 
+ Container shopcdc-connect-1 Started 
+# exit 0 at 11:17:02 IST
+
+$ make connector
+# started 11:17:02 IST
+scripts/wait_for_connect.sh
+python3 -c "import json; print(json.dumps(json.load(open('connect/shop-postgres.json'))['config']))" | \
+	  curl -fsS -X PUT -H 'Content-Type: application/json' --data @- 127.0.0.1:8083/connectors/shop-postgres/config
+{"name":"shop-postgres","config":{"connector.class":"io.debezium.connector.postgresql.PostgresConnector","tasks.max":"1","database.hostname":"postgres","database.port":"5432","database.user":"shop","database.password":"shop","database.dbname":"shop","topic.prefix":"shop","plugin.name":"pgoutput","publication.name":"shop_pub","publication.autocreate.mode":"disabled","slot.name":"shop_slot","table.include.list":"public.customers,public.products,public.orders,public.order_items,public.payments","snapshot.mode":"initial","decimal.handling.mode":"string","tombstones.on.delete":"true","key.converter":"org.apache.kafka.connect.json.JsonConverter","key.converter.schemas.enable":"false","value.converter":"org.apache.kafka.connect.json.JsonConverter","value.converter.schemas.enable":"false","name":"shop-postgres"},"tasks":[],"type":"source"}
+# exit 0 at 11:17:23 IST
+
+$ make generate EVENTS=5000
+# started 11:17:23 IST
+PYTHONPATH=src uv run python -m shop.generator --events 5000 --seed 42
+{
+  "seed": 42,
+  "events": 5000,
+  "applied": true,
+  "by_table": {
+    "customers": {
+      "insert": 152,
+      "update": 285,
+      "delete": 30
+    },
+    "products": {
+      "insert": 36,
+      "update": 201,
+      "delete": 0
+    },
+    "orders": {
+      "insert": 554,
+      "update": 910,
+      "delete": 64
+    },
+    "order_items": {
+      "insert": 1386,
+      "update": 0,
+      "delete": 249
+    },
+    "payments": {
+      "insert": 554,
+      "update": 515,
+      "delete": 64
+    }
+  },
+  "by_op": {
+    "insert": 2682,
+    "update": 1911,
+    "delete": 407
+  }
+}
+# exit 0 at 11:17:26 IST
+
+# wait 30 s for Debezium to publish the last events
+
+$ PYTHONPATH=src uv run python -m shop.lander --landing landing --block 50
+# started 11:17:56 IST
+{
+  "partitions": 5,
+  "events_in_files": 5000,
+  "events_read": 5407,
+  "files_written": 109,
+  "tombstones_skipped": 407
+}
+# exit 0 at 11:17:56 IST
+
+$ make deploy
+# started 11:17:56 IST
+scripts/with-secrets.sh databricks bundle deploy --var landing_root=/Volumes/shop_demo/shop_landing/landing \
+	  --var catalog=shop_demo --var checkpoints=/Volumes/shop_demo/shop_landing/checkpoints
+Databricks skills are not installed. To work with Databricks reliably, first run: databricks aitools install
+Uploading bundle files to /Workspace/Users/<user>/.bundle/shop-cdc-lakehouse/dev/files...
+Updated jobs.shop_pipeline
+Files: 86 uploaded, 4 deleted
+Resources: 0 created, 1 changed, 0 deleted, 0 unchanged
+# exit 0 at 11:18:08 IST
+
+$ scripts/with-secrets.sh uv run python scripts/run_pipeline.py --prefix shop --bronze shop_bronze --silver shop_silver --events 5000
+# started 11:18:08 IST
+uploaded customers/shop.public.customers__p0__000000000000-000000000049.jsonl
+uploaded customers/shop.public.customers__p0__000000000050-000000000099.jsonl
+uploaded customers/shop.public.customers__p0__000000000100-000000000148.jsonl
+uploaded customers/shop.public.customers__p0__000000000150-000000000199.jsonl
+uploaded customers/shop.public.customers__p0__000000000200-000000000249.jsonl
+uploaded customers/shop.public.customers__p0__000000000250-000000000299.jsonl
+uploaded customers/shop.public.customers__p0__000000000300-000000000349.jsonl
+uploaded customers/shop.public.customers__p0__000000000350-000000000399.jsonl
+uploaded customers/shop.public.customers__p0__000000000400-000000000449.jsonl
+uploaded customers/shop.public.customers__p0__000000000450-000000000496.jsonl
+uploaded order_items/shop.public.order_items__p0__000000000000-000000000048.jsonl
+uploaded order_items/shop.public.order_items__p0__000000000050-000000000098.jsonl
+uploaded order_items/shop.public.order_items__p0__000000000100-000000000149.jsonl
+uploaded order_items/shop.public.order_items__p0__000000000150-000000000198.jsonl
+uploaded order_items/shop.public.order_items__p0__000000000200-000000000249.jsonl
+uploaded order_items/shop.public.order_items__p0__000000000250-000000000299.jsonl
+uploaded order_items/shop.public.order_items__p0__000000000300-000000000349.jsonl
+uploaded order_items/shop.public.order_items__p0__000000000350-000000000399.jsonl
+uploaded order_items/shop.public.order_items__p0__000000000400-000000000449.jsonl
+uploaded order_items/shop.public.order_items__p0__000000000450-000000000499.jsonl
+uploaded order_items/shop.public.order_items__p0__000000000500-000000000549.jsonl
+uploaded order_items/shop.public.order_items__p0__000000000550-000000000599.jsonl
+uploaded order_items/shop.public.order_items__p0__000000000600-000000000649.jsonl
+uploaded order_items/shop.public.order_items__p0__000000000650-000000000699.jsonl
+uploaded order_items/shop.public.order_items__p0__000000000700-000000000748.jsonl
+uploaded order_items/shop.public.order_items__p0__000000000750-000000000799.jsonl
+uploaded order_items/shop.public.order_items__p0__000000000801-000000000849.jsonl
+uploaded order_items/shop.public.order_items__p0__000000000850-000000000899.jsonl
+uploaded order_items/shop.public.order_items__p0__000000000900-000000000949.jsonl
+uploaded order_items/shop.public.order_items__p0__000000000950-000000000999.jsonl
+uploaded order_items/shop.public.order_items__p0__000000001000-000000001049.jsonl
+uploaded order_items/shop.public.order_items__p0__000000001050-000000001099.jsonl
+uploaded order_items/shop.public.order_items__p0__000000001100-000000001149.jsonl
+uploaded order_items/shop.public.order_items__p0__000000001150-000000001199.jsonl
+uploaded order_items/shop.public.order_items__p0__000000001201-000000001249.jsonl
+uploaded order_items/shop.public.order_items__p0__000000001250-000000001299.jsonl
+uploaded order_items/shop.public.order_items__p0__000000001300-000000001349.jsonl
+uploaded order_items/shop.public.order_items__p0__000000001350-000000001399.jsonl
+uploaded order_items/shop.public.order_items__p0__000000001400-000000001449.jsonl
+uploaded order_items/shop.public.order_items__p0__000000001450-000000001498.jsonl
+uploaded order_items/shop.public.order_items__p0__000000001500-000000001548.jsonl
+uploaded order_items/shop.public.order_items__p0__000000001550-000000001599.jsonl
+uploaded order_items/shop.public.order_items__p0__000000001600-000000001649.jsonl
+uploaded order_items/shop.public.order_items__p0__000000001651-000000001698.jsonl
+uploaded order_items/shop.public.order_items__p0__000000001700-000000001749.jsonl
+uploaded order_items/shop.public.order_items__p0__000000001751-000000001799.jsonl
+uploaded order_items/shop.public.order_items__p0__000000001801-000000001849.jsonl
+uploaded order_items/shop.public.order_items__p0__000000001850-000000001882.jsonl
+uploaded orders/shop.public.orders__p0__000000000000-000000000049.jsonl
+uploaded orders/shop.public.orders__p0__000000000051-000000000099.jsonl
+uploaded orders/shop.public.orders__p0__000000000100-000000000149.jsonl
+uploaded orders/shop.public.orders__p0__000000000150-000000000199.jsonl
+uploaded orders/shop.public.orders__p0__000000000200-000000000249.jsonl
+uploaded orders/shop.public.orders__p0__000000000250-000000000299.jsonl
+uploaded orders/shop.public.orders__p0__000000000300-000000000349.jsonl
+uploaded orders/shop.public.orders__p0__000000000350-000000000399.jsonl
+uploaded orders/shop.public.orders__p0__000000000400-000000000449.jsonl
+uploaded orders/shop.public.orders__p0__000000000450-000000000499.jsonl
+uploaded orders/shop.public.orders__p0__000000000500-000000000549.jsonl
+uploaded orders/shop.public.orders__p0__000000000550-000000000599.jsonl
+uploaded orders/shop.public.orders__p0__000000000600-000000000649.jsonl
+uploaded orders/shop.public.orders__p0__000000000650-000000000699.jsonl
+uploaded orders/shop.public.orders__p0__000000000700-000000000749.jsonl
+uploaded orders/shop.public.orders__p0__000000000750-000000000799.jsonl
+uploaded orders/shop.public.orders__p0__000000000800-000000000849.jsonl
+uploaded orders/shop.public.orders__p0__000000000850-000000000899.jsonl
+uploaded orders/shop.public.orders__p0__000000000900-000000000949.jsonl
+uploaded orders/shop.public.orders__p0__000000000950-000000000999.jsonl
+uploaded orders/shop.public.orders__p0__000000001000-000000001049.jsonl
+uploaded orders/shop.public.orders__p0__000000001050-000000001099.jsonl
+uploaded orders/shop.public.orders__p0__000000001100-000000001149.jsonl
+uploaded orders/shop.public.orders__p0__000000001150-000000001199.jsonl
+uploaded orders/shop.public.orders__p0__000000001200-000000001249.jsonl
+uploaded orders/shop.public.orders__p0__000000001250-000000001299.jsonl
+uploaded orders/shop.public.orders__p0__000000001300-000000001349.jsonl
+uploaded orders/shop.public.orders__p0__000000001350-000000001399.jsonl
+uploaded orders/shop.public.orders__p0__000000001400-000000001449.jsonl
+uploaded orders/shop.public.orders__p0__000000001450-000000001499.jsonl
+uploaded orders/shop.public.orders__p0__000000001500-000000001549.jsonl
+uploaded orders/shop.public.orders__p0__000000001550-000000001591.jsonl
+uploaded payments/shop.public.payments__p0__000000000000-000000000049.jsonl
+uploaded payments/shop.public.payments__p0__000000000050-000000000099.jsonl
+uploaded payments/shop.public.payments__p0__000000000100-000000000149.jsonl
+uploaded payments/shop.public.payments__p0__000000000150-000000000199.jsonl
+uploaded payments/shop.public.payments__p0__000000000200-000000000249.jsonl
+uploaded payments/shop.public.payments__p0__000000000250-000000000299.jsonl
+uploaded payments/shop.public.payments__p0__000000000300-000000000349.jsonl
+uploaded payments/shop.public.payments__p0__000000000350-000000000398.jsonl
+uploaded payments/shop.public.payments__p0__000000000400-000000000449.jsonl
+uploaded payments/shop.public.payments__p0__000000000450-000000000499.jsonl
+uploaded payments/shop.public.payments__p0__000000000500-000000000549.jsonl
+uploaded payments/shop.public.payments__p0__000000000550-000000000599.jsonl
+uploaded payments/shop.public.payments__p0__000000000600-000000000648.jsonl
+uploaded payments/shop.public.payments__p0__000000000650-000000000699.jsonl
+uploaded payments/shop.public.payments__p0__000000000700-000000000749.jsonl
+uploaded payments/shop.public.payments__p0__000000000750-000000000799.jsonl
+uploaded payments/shop.public.payments__p0__000000000800-000000000849.jsonl
+uploaded payments/shop.public.payments__p0__000000000850-000000000899.jsonl
+uploaded payments/shop.public.payments__p0__000000000900-000000000949.jsonl
+uploaded payments/shop.public.payments__p0__000000000950-000000000999.jsonl
+uploaded payments/shop.public.payments__p0__000000001000-000000001049.jsonl
+uploaded payments/shop.public.payments__p0__000000001050-000000001099.jsonl
+uploaded payments/shop.public.payments__p0__000000001100-000000001149.jsonl
+uploaded payments/shop.public.payments__p0__000000001150-000000001196.jsonl
+uploaded products/shop.public.products__p0__000000000000-000000000049.jsonl
+uploaded products/shop.public.products__p0__000000000050-000000000099.jsonl
+uploaded products/shop.public.products__p0__000000000100-000000000149.jsonl
+uploaded products/shop.public.products__p0__000000000150-000000000199.jsonl
+uploaded products/shop.public.products__p0__000000000200-000000000236.jsonl
+{
+  "upload": {
+    "uploaded": 109,
+    "skipped_existing": 0
+  },
+  "upload_seconds": 177.7,
+  "run": {
+    "run_id": 422409881070641,
+    "seconds": 153.0,
+    "started": "2026-11-17 11:21"
+  },
+  "silver_rows_and_deleted_marks": {
+    "customers": [
+      152,
+      30
+    ],
+    "products": [
+      36,
+      0
+    ],
+    "orders": [
+      554,
+      64
+    ],
+    "order_items": [
+      1386,
+      249
+    ],
+    "payments": [
+      554,
+      64
+    ]
+  }
+}
+# exit 0 at 11:23:53 IST
+
+$ scripts/with-secrets.sh uv run python -m shop.reconcile --catalog shop_demo
+# started 11:23:53 IST
+{
+  "customers": {
+    "table": "shop_demo.shop_silver.customers",
+    "source_rows": 122,
+    "lake_rows": 122,
+    "missing_in_lake": 0,
+    "extra_in_lake": 0,
+    "differing_rows": 0,
+    "examples": {
+      "missing": [],
+      "extra": [],
+      "differing": []
+    },
+    "pass": true
+  },
+  "products": {
+    "table": "shop_demo.shop_silver.products",
+    "source_rows": 36,
+    "lake_rows": 36,
+    "missing_in_lake": 0,
+    "extra_in_lake": 0,
+    "differing_rows": 0,
+    "examples": {
+      "missing": [],
+      "extra": [],
+      "differing": []
+    },
+    "pass": true
+  },
+  "orders": {
+    "table": "shop_demo.shop_silver.orders",
+    "source_rows": 490,
+    "lake_rows": 490,
+    "missing_in_lake": 0,
+    "extra_in_lake": 0,
+    "differing_rows": 0,
+    "examples": {
+      "missing": [],
+      "extra": [],
+      "differing": []
+    },
+    "pass": true
+  },
+  "order_items": {
+    "table": "shop_demo.shop_silver.order_items",
+    "source_rows": 1137,
+    "lake_rows": 1137,
+    "missing_in_lake": 0,
+    "extra_in_lake": 0,
+    "differing_rows": 0,
+    "examples": {
+      "missing": [],
+      "extra": [],
+      "differing": []
+    },
+    "pass": true
+  },
+  "payments": {
+    "table": "shop_demo.shop_silver.payments",
+    "source_rows": 490,
+    "lake_rows": 490,
+    "missing_in_lake": 0,
+    "extra_in_lake": 0,
+    "differing_rows": 0,
+    "examples": {
+      "missing": [],
+      "extra": [],
+      "differing": []
+    },
+    "pass": true
+  },
+  "ALL_PASS": true
+}
+# exit 0 at 11:24:01 IST
+
+$ scripts/with-secrets.sh uv run dbt build --project-dir dbt --profiles-dir dbt
+# started 11:24:01 IST
+05:54:03  Running with dbt=1.12.6
+05:54:05  Registered adapter: databricks=1.13.0
+05:54:05  Unable to do partial parsing because profile has changed
+05:54:06  Found 7 models, 20 data tests, 8 sources, 782 macros
+05:54:06  
+05:54:06  Concurrency: 8 threads (target='dev')
+05:54:06  
+05:54:15  2 of 27 START sql view model shop_marts.stg_order_items ........................ [RUN]
+05:54:15  1 of 27 START sql view model shop_marts.stg_customers_history .................. [RUN]
+05:54:15  3 of 27 START sql view model shop_marts.stg_order_steps ........................ [RUN]
+05:54:15  4 of 27 START sql view model shop_marts.stg_orders ............................. [RUN]
+05:54:17  3 of 27 OK created sql view model shop_marts.stg_order_steps ................... [OK in 2.29s]
+05:54:17  2 of 27 OK created sql view model shop_marts.stg_order_items ................... [OK in 2.29s]
+05:54:17  5 of 27 START test not_null_stg_order_steps_order_id ........................... [RUN]
+05:54:17  6 of 27 START test unique_stg_order_steps_order_id ............................. [RUN]
+05:54:17  7 of 27 START test not_null_stg_order_items_order_id ........................... [RUN]
+05:54:17  8 of 27 START test not_null_stg_order_items_order_item_id ...................... [RUN]
+05:54:17  9 of 27 START test unique_stg_order_items_order_item_id ........................ [RUN]
+05:54:17  4 of 27 OK created sql view model shop_marts.stg_orders ........................ [OK in 2.35s]
+05:54:17  1 of 27 OK created sql view model shop_marts.stg_customers_history ............. [OK in 2.35s]
+05:54:17  10 of 27 START test not_null_stg_orders_created_lsn ............................ [RUN]
+05:54:17  11 of 27 START test not_null_stg_orders_customer_id ............................ [RUN]
+05:54:17  12 of 27 START test not_null_stg_orders_order_id ............................... [RUN]
+05:54:19  6 of 27 PASS unique_stg_order_steps_order_id ................................... [PASS in 2.26s]
+05:54:19  13 of 27 START test relationships_stg_order_items_order_id__order_id__ref_stg_orders_  [RUN]
+05:54:20  9 of 27 PASS unique_stg_order_items_order_item_id .............................. [PASS in 2.65s]
+05:54:20  14 of 27 START test unique_stg_orders_order_id ................................. [RUN]
+05:54:20  8 of 27 PASS not_null_stg_order_items_order_item_id ............................ [PASS in 2.67s]
+05:54:20  15 of 27 START test each_order_matches_one_customer_version .................... [RUN]
+05:54:20  5 of 27 PASS not_null_stg_order_steps_order_id ................................. [PASS in 2.71s]
+05:54:20  7 of 27 PASS not_null_stg_order_items_order_id ................................. [PASS in 2.71s]
+05:54:20  16 of 27 START test relationships_stg_orders_customer_id__customer_id__ref_stg_customers_history_  [RUN]
+05:54:20  12 of 27 PASS not_null_stg_orders_order_id ..................................... [PASS in 2.65s]
+05:54:20  11 of 27 PASS not_null_stg_orders_customer_id .................................. [PASS in 2.82s]
+05:54:20  10 of 27 PASS not_null_stg_orders_created_lsn .................................. [PASS in 2.91s]
+05:54:21  13 of 27 PASS relationships_stg_order_items_order_id__order_id__ref_stg_orders_  [PASS in 2.26s]
+05:54:22  14 of 27 PASS unique_stg_orders_order_id ....................................... [PASS in 2.17s]
+05:54:22  17 of 27 START sql table model shop_marts.daily_revenue ........................ [RUN]
+05:54:22  18 of 27 START sql table model shop_marts.order_status_funnel .................. [RUN]
+05:54:22  16 of 27 PASS relationships_stg_orders_customer_id__customer_id__ref_stg_customers_history_  [PASS in 2.55s]
+05:54:22  15 of 27 PASS each_order_matches_one_customer_version .......................... [PASS in 2.61s]
+05:54:22  19 of 27 START sql table model shop_marts.revenue_by_customer_attributes ....... [RUN]
+05:54:29  18 of 27 OK created sql table model shop_marts.order_status_funnel ............. [OK in 7.19s]
+05:54:29  20 of 27 START test funnel_counts_every_order_ever_placed ...................... [RUN]
+05:54:29  21 of 27 START test not_null_order_status_funnel_status ........................ [RUN]
+05:54:29  22 of 27 START test unique_order_status_funnel_status .......................... [RUN]
+05:54:29  19 of 27 OK created sql table model shop_marts.revenue_by_customer_attributes .. [OK in 6.75s]
+05:54:29  23 of 27 START test not_null_revenue_by_customer_attributes_country ............ [RUN]
+05:54:29  24 of 27 START test revenue_by_attributes_unique_country_city .................. [RUN]
+05:54:30  17 of 27 OK created sql table model shop_marts.daily_revenue ................... [OK in 8.34s]
+05:54:30  25 of 27 START test not_null_daily_revenue_order_date .......................... [RUN]
+05:54:30  26 of 27 START test revenue_totals_agree ....................................... [RUN]
+05:54:30  27 of 27 START test unique_daily_revenue_order_date ............................ [RUN]
+05:54:31  21 of 27 PASS not_null_order_status_funnel_status .............................. [PASS in 2.19s]
+05:54:31  23 of 27 PASS not_null_revenue_by_customer_attributes_country .................. [PASS in 2.18s]
+05:54:31  24 of 27 PASS revenue_by_attributes_unique_country_city ........................ [PASS in 2.21s]
+05:54:31  22 of 27 PASS unique_order_status_funnel_status ................................ [PASS in 2.32s]
+05:54:32  20 of 27 PASS funnel_counts_every_order_ever_placed ............................ [PASS in 2.69s]
+05:54:32  25 of 27 PASS not_null_daily_revenue_order_date ................................ [PASS in 2.08s]
+05:54:32  27 of 27 PASS unique_daily_revenue_order_date .................................. [PASS in 2.16s]
+05:54:32  26 of 27 PASS revenue_totals_agree ............................................. [PASS in 2.25s]
+05:54:32  
+05:54:32  Finished running 3 table models, 20 data tests, 4 view models in 0 hours 0 minutes and 26.42 seconds (26.42s).
+05:54:32  
+05:54:32  Completed successfully
+05:54:32  
+05:54:32  Done. PASS=27 WARN=0 ERROR=0 SKIP=0 NO-OP=0 REUSED=0 TOTAL=27
+# exit 0 at 11:24:34 IST
+
+$ make ci
+# started 11:24:34 IST
+uv run ruff check --output-format concise src tests jobs scripts
+All checks passed!
+uv run pytest -q
+.....................................                                    [100%]
+37 passed in 0.99s
+DATABRICKS_HOST=ci.invalid DATABRICKS_TOKEN="not-a-secret" SHOP_WAREHOUSE_HTTP_PATH=/ci uv run dbt parse --project-dir dbt --profiles-dir dbt
+05:54:37  Running with dbt=1.12.6
+05:54:39  Registered adapter: databricks=1.13.0
+05:54:39  Unable to do partial parsing because profile has changed
+05:54:40  Performance info: dbt/target/perf_info.json
+# exit 0 at 11:24:41 IST
+
+# DOCUMENTATION.md section 7 proof block
+
+$ make ci
+# started 11:24:41 IST
+uv run ruff check --output-format concise src tests jobs scripts
+All checks passed!
+uv run pytest -q
+.....................................                                    [100%]
+37 passed in 0.97s
+DATABRICKS_HOST=ci.invalid DATABRICKS_TOKEN="not-a-secret" SHOP_WAREHOUSE_HTTP_PATH=/ci uv run dbt parse --project-dir dbt --profiles-dir dbt
+05:54:44  Running with dbt=1.12.6
+05:54:45  Registered adapter: databricks=1.13.0
+05:54:46  Performance info: dbt/target/perf_info.json
+# exit 0 at 11:24:47 IST
+
+$ scripts/with-secrets.sh uv run dbt build --project-dir dbt --profiles-dir dbt
+# started 11:24:47 IST
+05:54:48  Running with dbt=1.12.6
+05:54:50  Registered adapter: databricks=1.13.0
+05:54:50  Unable to do partial parsing because profile has changed
+05:54:51  Found 7 models, 20 data tests, 8 sources, 782 macros
+05:54:51  
+05:54:51  Concurrency: 8 threads (target='dev')
+05:54:51  
+05:54:58  1 of 27 START sql view model shop_marts.stg_customers_history .................. [RUN]
+05:54:58  2 of 27 START sql view model shop_marts.stg_order_items ........................ [RUN]
+05:54:58  3 of 27 START sql view model shop_marts.stg_order_steps ........................ [RUN]
+05:54:58  4 of 27 START sql view model shop_marts.stg_orders ............................. [RUN]
+05:55:01  4 of 27 OK created sql view model shop_marts.stg_orders ........................ [OK in 2.39s]
+05:55:01  5 of 27 START test not_null_stg_orders_created_lsn ............................. [RUN]
+05:55:01  6 of 27 START test not_null_stg_orders_customer_id ............................. [RUN]
+05:55:01  7 of 27 START test not_null_stg_orders_order_id ................................ [RUN]
+05:55:01  8 of 27 START test unique_stg_orders_order_id .................................. [RUN]
+05:55:01  2 of 27 OK created sql view model shop_marts.stg_order_items ................... [OK in 2.40s]
+05:55:01  3 of 27 OK created sql view model shop_marts.stg_order_steps ................... [OK in 2.41s]
+05:55:01  9 of 27 START test not_null_stg_order_items_order_id ........................... [RUN]
+05:55:01  10 of 27 START test not_null_stg_order_items_order_item_id ..................... [RUN]
+05:55:01  11 of 27 START test relationships_stg_order_items_order_id__order_id__ref_stg_orders_  [RUN]
+05:55:01  1 of 27 OK created sql view model shop_marts.stg_customers_history ............. [OK in 2.51s]
+05:55:01  12 of 27 START test unique_stg_order_items_order_item_id ....................... [RUN]
+05:55:03  7 of 27 PASS not_null_stg_orders_order_id ...................................... [PASS in 2.23s]
+05:55:03  6 of 27 PASS not_null_stg_orders_customer_id ................................... [PASS in 2.24s]
+05:55:03  5 of 27 PASS not_null_stg_orders_created_lsn ................................... [PASS in 2.24s]
+05:55:03  13 of 27 START test not_null_stg_order_steps_order_id .......................... [RUN]
+05:55:03  14 of 27 START test unique_stg_order_steps_order_id ............................ [RUN]
+05:55:03  10 of 27 PASS not_null_stg_order_items_order_item_id ........................... [PASS in 2.21s]
+05:55:03  15 of 27 START test each_order_matches_one_customer_version .................... [RUN]
+05:55:03  12 of 27 PASS unique_stg_order_items_order_item_id ............................. [PASS in 2.15s]
+05:55:03  16 of 27 START test relationships_stg_orders_customer_id__customer_id__ref_stg_customers_history_  [RUN]
+05:55:03  9 of 27 PASS not_null_stg_order_items_order_id ................................. [PASS in 2.26s]
+05:55:03  8 of 27 PASS unique_stg_orders_order_id ........................................ [PASS in 2.29s]
+05:55:03  11 of 27 PASS relationships_stg_order_items_order_id__order_id__ref_stg_orders_  [PASS in 2.26s]
+05:55:03  17 of 27 START sql table model shop_marts.daily_revenue ........................ [RUN]
+05:55:05  13 of 27 PASS not_null_stg_order_steps_order_id ................................ [PASS in 1.90s]
+05:55:05  14 of 27 PASS unique_stg_order_steps_order_id .................................. [PASS in 1.90s]
+05:55:05  18 of 27 START sql table model shop_marts.order_status_funnel .................. [RUN]
+05:55:05  15 of 27 PASS each_order_matches_one_customer_version .......................... [PASS in 2.04s]
+05:55:05  16 of 27 PASS relationships_stg_orders_customer_id__customer_id__ref_stg_customers_history_  [PASS in 2.03s]
+05:55:05  19 of 27 START sql table model shop_marts.revenue_by_customer_attributes ....... [RUN]
+05:55:07  17 of 27 OK created sql table model shop_marts.daily_revenue ................... [OK in 3.99s]
+05:55:07  20 of 27 START test not_null_daily_revenue_order_date .......................... [RUN]
+05:55:07  21 of 27 START test unique_daily_revenue_order_date ............................ [RUN]
+05:55:09  21 of 27 PASS unique_daily_revenue_order_date .................................. [PASS in 2.04s]
+05:55:09  18 of 27 OK created sql table model shop_marts.order_status_funnel ............. [OK in 4.22s]
+05:55:09  22 of 27 START test funnel_counts_every_order_ever_placed ...................... [RUN]
+05:55:09  23 of 27 START test not_null_order_status_funnel_status ........................ [RUN]
+05:55:09  24 of 27 START test unique_order_status_funnel_status .......................... [RUN]
+05:55:09  20 of 27 PASS not_null_daily_revenue_order_date ................................ [PASS in 2.14s]
+05:55:09  19 of 27 OK created sql table model shop_marts.revenue_by_customer_attributes .. [OK in 4.25s]
+05:55:09  25 of 27 START test not_null_revenue_by_customer_attributes_country ............ [RUN]
+05:55:09  26 of 27 START test revenue_by_attributes_unique_country_city .................. [RUN]
+05:55:09  27 of 27 START test revenue_totals_agree ....................................... [RUN]
+05:55:11  23 of 27 PASS not_null_order_status_funnel_status .............................. [PASS in 1.84s]
+05:55:11  24 of 27 PASS unique_order_status_funnel_status ................................ [PASS in 2.04s]
+05:55:11  25 of 27 PASS not_null_revenue_by_customer_attributes_country .................. [PASS in 1.99s]
+05:55:11  26 of 27 PASS revenue_by_attributes_unique_country_city ........................ [PASS in 2.04s]
+05:55:12  22 of 27 PASS funnel_counts_every_order_ever_placed ............................ [PASS in 2.37s]
+05:55:12  27 of 27 PASS revenue_totals_agree ............................................. [PASS in 2.19s]
+05:55:12  
+05:55:12  Finished running 3 table models, 20 data tests, 4 view models in 0 hours 0 minutes and 20.39 seconds (20.39s).
+05:55:12  
+05:55:12  Completed successfully
+05:55:12  
+05:55:12  Done. PASS=27 WARN=0 ERROR=0 SKIP=0 NO-OP=0 REUSED=0 TOTAL=27
+# exit 0 at 11:25:13 IST
+
+$ scripts/with-secrets.sh uv run python -m shop.reconcile --catalog shop_demo
+# started 11:25:13 IST
+{
+  "customers": {
+    "table": "shop_demo.shop_silver.customers",
+    "source_rows": 122,
+    "lake_rows": 122,
+    "missing_in_lake": 0,
+    "extra_in_lake": 0,
+    "differing_rows": 0,
+    "examples": {
+      "missing": [],
+      "extra": [],
+      "differing": []
+    },
+    "pass": true
+  },
+  "products": {
+    "table": "shop_demo.shop_silver.products",
+    "source_rows": 36,
+    "lake_rows": 36,
+    "missing_in_lake": 0,
+    "extra_in_lake": 0,
+    "differing_rows": 0,
+    "examples": {
+      "missing": [],
+      "extra": [],
+      "differing": []
+    },
+    "pass": true
+  },
+  "orders": {
+    "table": "shop_demo.shop_silver.orders",
+    "source_rows": 490,
+    "lake_rows": 490,
+    "missing_in_lake": 0,
+    "extra_in_lake": 0,
+    "differing_rows": 0,
+    "examples": {
+      "missing": [],
+      "extra": [],
+      "differing": []
+    },
+    "pass": true
+  },
+  "order_items": {
+    "table": "shop_demo.shop_silver.order_items",
+    "source_rows": 1137,
+    "lake_rows": 1137,
+    "missing_in_lake": 0,
+    "extra_in_lake": 0,
+    "differing_rows": 0,
+    "examples": {
+      "missing": [],
+      "extra": [],
+      "differing": []
+    },
+    "pass": true
+  },
+  "payments": {
+    "table": "shop_demo.shop_silver.payments",
+    "source_rows": 490,
+    "lake_rows": 490,
+    "missing_in_lake": 0,
+    "extra_in_lake": 0,
+    "differing_rows": 0,
+    "examples": {
+      "missing": [],
+      "extra": [],
+      "differing": []
+    },
+    "pass": true
+  },
+  "ALL_PASS": true
+}
+# exit 0 at 11:25:20 IST
+
+$ scripts/with-secrets.sh uv run python scripts/replay_test.py
+# started 11:25:20 IST
+{
+  "before": {
+    "customers": {
+      "rows": 152,
+      "table_hash": "1fed6b9d47c64c95e69f33ce9783ac9f1509d5bf9970638a2d7323a94b1b30a6"
+    },
+    "products": {
+      "rows": 36,
+      "table_hash": "673e219dbb1e4068fba3cb209a29f0e843fd05d9bbdacb62d66643797ac156f6"
+    },
+    "orders": {
+      "rows": 554,
+      "table_hash": "c24a256630bea0e65d0b2aa41c97107280ee3c9a96e509a6e9f8d785f1cb7ab9"
+    },
+    "order_items": {
+      "rows": 1386,
+      "table_hash": "734a858f328ac7f451de20972391adc3da4c59e72a7dee0b86f076d8897436ca"
+    },
+    "payments": {
+      "rows": 554,
+      "table_hash": "6850f4ede090d419bcb53bf5f39094f3ce008e56392d10892334022e8d0e1afa"
+    }
+  },
+  "after": {
+    "customers": {
+      "rows": 152,
+      "table_hash": "1fed6b9d47c64c95e69f33ce9783ac9f1509d5bf9970638a2d7323a94b1b30a6"
+    },
+    "products": {
+      "rows": 36,
+      "table_hash": "673e219dbb1e4068fba3cb209a29f0e843fd05d9bbdacb62d66643797ac156f6"
+    },
+    "orders": {
+      "rows": 554,
+      "table_hash": "c24a256630bea0e65d0b2aa41c97107280ee3c9a96e509a6e9f8d785f1cb7ab9"
+    },
+    "order_items": {
+      "rows": 1386,
+      "table_hash": "734a858f328ac7f451de20972391adc3da4c59e72a7dee0b86f076d8897436ca"
+    },
+    "payments": {
+      "rows": 554,
+      "table_hash": "6850f4ede090d419bcb53bf5f39094f3ce008e56392d10892334022e8d0e1afa"
+    }
+  },
+  "run": {
+    "run_id": 1065865241194261,
+    "seconds": 56.0,
+    "started": "2026-11-17 11:25"
+  },
+  "run_started_utc": "2026-11-17 05:55:32.056310+00:00",
+  "history_before": {
+    "customers": {
+      "version0_operation": "CREATE TABLE",
+      "version0_timestamp": "2026-11-17 05:51:20+00:00",
+      "last_version": 1,
+      "last_operation": "MERGE"
+    },
+    "products": {
+      "version0_operation": "CREATE TABLE",
+      "version0_timestamp": "2026-11-17 05:51:48+00:00",
+      "last_version": 1,
+      "last_operation": "MERGE"
+    },
+    "orders": {
+      "version0_operation": "CREATE TABLE",
+      "version0_timestamp": "2026-11-17 05:52:03+00:00",
+      "last_version": 3,
+      "last_operation": "OPTIMIZE"
+    },
+    "order_items": {
+      "version0_operation": "CREATE TABLE",
+      "version0_timestamp": "2026-11-17 05:52:30+00:00",
+      "last_version": 3,
+      "last_operation": "OPTIMIZE"
+    },
+    "payments": {
+      "version0_operation": "CREATE TABLE",
+      "version0_timestamp": "2026-11-17 05:52:55+00:00",
+      "last_version": 3,
+      "last_operation": "OPTIMIZE"
+    }
+  },
+  "history_after": {
+    "customers": {
+      "version0_operation": "CREATE TABLE",
+      "version0_timestamp": "2026-11-17 05:55:46+00:00",
+      "last_version": 1,
+      "last_operation": "MERGE"
+    },
+    "products": {
+      "version0_operation": "CREATE TABLE",
+      "version0_timestamp": "2026-11-17 05:55:52+00:00",
+      "last_version": 1,
+      "last_operation": "MERGE"
+    },
+    "orders": {
+      "version0_operation": "CREATE TABLE",
+      "version0_timestamp": "2026-11-17 05:55:57+00:00",
+      "last_version": 1,
+      "last_operation": "MERGE"
+    },
+    "order_items": {
+      "version0_operation": "CREATE TABLE",
+      "version0_timestamp": "2026-11-17 05:56:03+00:00",
+      "last_version": 1,
+      "last_operation": "MERGE"
+    },
+    "payments": {
+      "version0_operation": "CREATE TABLE",
+      "version0_timestamp": "2026-11-17 05:56:08+00:00",
+      "last_version": 1,
+      "last_operation": "MERGE"
+    }
+  },
+  "identical": {
+    "customers": true,
+    "products": true,
+    "orders": true,
+    "order_items": true,
+    "payments": true
+  },
+  "recreated_during_run": {
+    "customers": true,
+    "products": true,
+    "orders": true,
+    "order_items": true,
+    "payments": true
+  },
+  "PASS": true
+}
+# exit 0 at 11:26:38 IST
+
+$ scripts/with-secrets.sh uv run python scripts/disorder_test.py --tag dis --reference shop_silver
+# started 11:26:38 IST
+uploaded customers/shop.public.customers__p0__000000000350-000000000399.jsonl
+uploaded customers/shop.public.customers__p0__000000000400-000000000449.jsonl
+uploaded customers/shop.public.customers__p0__000000000450-000000000496.jsonl
+uploaded products/shop.public.products__p0__000000000200-000000000236.jsonl
+uploaded orders/shop.public.orders__p0__000000001100-000000001149.jsonl
+uploaded orders/shop.public.orders__p0__000000001150-000000001199.jsonl
+uploaded orders/shop.public.orders__p0__000000001200-000000001249.jsonl
+uploaded orders/shop.public.orders__p0__000000001250-000000001299.jsonl
+uploaded orders/shop.public.orders__p0__000000001300-000000001349.jsonl
+uploaded orders/shop.public.orders__p0__000000001350-000000001399.jsonl
+uploaded orders/shop.public.orders__p0__000000001400-000000001449.jsonl
+uploaded orders/shop.public.orders__p0__000000001450-000000001499.jsonl
+uploaded orders/shop.public.orders__p0__000000001500-000000001549.jsonl
+uploaded orders/shop.public.orders__p0__000000001550-000000001591.jsonl
+uploaded order_items/shop.public.order_items__p0__000000001300-000000001349.jsonl
+uploaded order_items/shop.public.order_items__p0__000000001350-000000001399.jsonl
+uploaded order_items/shop.public.order_items__p0__000000001400-000000001449.jsonl
+uploaded order_items/shop.public.order_items__p0__000000001450-000000001498.jsonl
+uploaded order_items/shop.public.order_items__p0__000000001500-000000001548.jsonl
+uploaded order_items/shop.public.order_items__p0__000000001550-000000001599.jsonl
+uploaded order_items/shop.public.order_items__p0__000000001600-000000001649.jsonl
+uploaded order_items/shop.public.order_items__p0__000000001651-000000001698.jsonl
+uploaded order_items/shop.public.order_items__p0__000000001700-000000001749.jsonl
+uploaded order_items/shop.public.order_items__p0__000000001751-000000001799.jsonl
+uploaded order_items/shop.public.order_items__p0__000000001801-000000001849.jsonl
+uploaded order_items/shop.public.order_items__p0__000000001850-000000001882.jsonl
+uploaded payments/shop.public.payments__p0__000000000800-000000000849.jsonl
+uploaded payments/shop.public.payments__p0__000000000850-000000000899.jsonl
+uploaded payments/shop.public.payments__p0__000000000900-000000000949.jsonl
+uploaded payments/shop.public.payments__p0__000000000950-000000000999.jsonl
+uploaded payments/shop.public.payments__p0__000000001000-000000001049.jsonl
+uploaded payments/shop.public.payments__p0__000000001050-000000001099.jsonl
+uploaded payments/shop.public.payments__p0__000000001100-000000001149.jsonl
+uploaded payments/shop.public.payments__p0__000000001150-000000001196.jsonl
+uploaded customers/shop.public.customers__p0__000000000000-000000000049.jsonl
+uploaded customers/shop.public.customers__p0__000000000050-000000000099.jsonl
+uploaded customers/shop.public.customers__p0__000000000100-000000000148.jsonl
+uploaded products/shop.public.products__p0__000000000000-000000000049.jsonl
+uploaded orders/shop.public.orders__p0__000000000000-000000000049.jsonl
+uploaded orders/shop.public.orders__p0__000000000051-000000000099.jsonl
+uploaded orders/shop.public.orders__p0__000000000100-000000000149.jsonl
+uploaded orders/shop.public.orders__p0__000000000150-000000000199.jsonl
+uploaded orders/shop.public.orders__p0__000000000200-000000000249.jsonl
+uploaded orders/shop.public.orders__p0__000000000250-000000000299.jsonl
+uploaded orders/shop.public.orders__p0__000000000300-000000000349.jsonl
+uploaded orders/shop.public.orders__p0__000000000350-000000000399.jsonl
+uploaded orders/shop.public.orders__p0__000000000400-000000000449.jsonl
+uploaded orders/shop.public.orders__p0__000000000450-000000000499.jsonl
+uploaded order_items/shop.public.order_items__p0__000000000000-000000000048.jsonl
+uploaded order_items/shop.public.order_items__p0__000000000050-000000000098.jsonl
+uploaded order_items/shop.public.order_items__p0__000000000100-000000000149.jsonl
+uploaded order_items/shop.public.order_items__p0__000000000150-000000000198.jsonl
+uploaded order_items/shop.public.order_items__p0__000000000200-000000000249.jsonl
+uploaded order_items/shop.public.order_items__p0__000000000250-000000000299.jsonl
+uploaded order_items/shop.public.order_items__p0__000000000300-000000000349.jsonl
+uploaded order_items/shop.public.order_items__p0__000000000350-000000000399.jsonl
+uploaded order_items/shop.public.order_items__p0__000000000400-000000000449.jsonl
+uploaded order_items/shop.public.order_items__p0__000000000450-000000000499.jsonl
+uploaded order_items/shop.public.order_items__p0__000000000500-000000000549.jsonl
+uploaded order_items/shop.public.order_items__p0__000000000550-000000000599.jsonl
+uploaded payments/shop.public.payments__p0__000000000000-000000000049.jsonl
+uploaded payments/shop.public.payments__p0__000000000050-000000000099.jsonl
+uploaded payments/shop.public.payments__p0__000000000100-000000000149.jsonl
+uploaded payments/shop.public.payments__p0__000000000150-000000000199.jsonl
+uploaded payments/shop.public.payments__p0__000000000200-000000000249.jsonl
+uploaded payments/shop.public.payments__p0__000000000250-000000000299.jsonl
+uploaded payments/shop.public.payments__p0__000000000300-000000000349.jsonl
+uploaded payments/shop.public.payments__p0__000000000350-000000000398.jsonl
+uploaded customers/shop.public.customers__p0__000000000150-000000000199.jsonl
+uploaded customers/shop.public.customers__p0__000000000200-000000000249.jsonl
+uploaded customers/shop.public.customers__p0__000000000250-000000000299.jsonl
+uploaded customers/shop.public.customers__p0__000000000300-000000000349.jsonl
+uploaded customers/dup__shop.public.customers__p0__000000000000-000000000049.jsonl
+uploaded products/shop.public.products__p0__000000000050-000000000099.jsonl
+uploaded products/shop.public.products__p0__000000000100-000000000149.jsonl
+uploaded products/shop.public.products__p0__000000000150-000000000199.jsonl
+uploaded products/dup__shop.public.products__p0__000000000000-000000000049.jsonl
+uploaded orders/shop.public.orders__p0__000000000500-000000000549.jsonl
+uploaded orders/shop.public.orders__p0__000000000550-000000000599.jsonl
+uploaded orders/shop.public.orders__p0__000000000600-000000000649.jsonl
+uploaded orders/shop.public.orders__p0__000000000650-000000000699.jsonl
+uploaded orders/shop.public.orders__p0__000000000700-000000000749.jsonl
+uploaded orders/shop.public.orders__p0__000000000750-000000000799.jsonl
+uploaded orders/shop.public.orders__p0__000000000800-000000000849.jsonl
+uploaded orders/shop.public.orders__p0__000000000850-000000000899.jsonl
+uploaded orders/shop.public.orders__p0__000000000900-000000000949.jsonl
+uploaded orders/shop.public.orders__p0__000000000950-000000000999.jsonl
+uploaded orders/shop.public.orders__p0__000000001000-000000001049.jsonl
+uploaded orders/shop.public.orders__p0__000000001050-000000001099.jsonl
+uploaded orders/dup__shop.public.orders__p0__000000000000-000000000049.jsonl
+uploaded order_items/shop.public.order_items__p0__000000000600-000000000649.jsonl
+uploaded order_items/shop.public.order_items__p0__000000000650-000000000699.jsonl
+uploaded order_items/shop.public.order_items__p0__000000000700-000000000748.jsonl
+uploaded order_items/shop.public.order_items__p0__000000000750-000000000799.jsonl
+uploaded order_items/shop.public.order_items__p0__000000000801-000000000849.jsonl
+uploaded order_items/shop.public.order_items__p0__000000000850-000000000899.jsonl
+uploaded order_items/shop.public.order_items__p0__000000000900-000000000949.jsonl
+uploaded order_items/shop.public.order_items__p0__000000000950-000000000999.jsonl
+uploaded order_items/shop.public.order_items__p0__000000001000-000000001049.jsonl
+uploaded order_items/shop.public.order_items__p0__000000001050-000000001099.jsonl
+uploaded order_items/shop.public.order_items__p0__000000001100-000000001149.jsonl
+uploaded order_items/shop.public.order_items__p0__000000001150-000000001199.jsonl
+uploaded order_items/shop.public.order_items__p0__000000001201-000000001249.jsonl
+uploaded order_items/shop.public.order_items__p0__000000001250-000000001299.jsonl
+uploaded order_items/dup__shop.public.order_items__p0__000000000000-000000000048.jsonl
+uploaded payments/shop.public.payments__p0__000000000400-000000000449.jsonl
+uploaded payments/shop.public.payments__p0__000000000450-000000000499.jsonl
+uploaded payments/shop.public.payments__p0__000000000500-000000000549.jsonl
+uploaded payments/shop.public.payments__p0__000000000550-000000000599.jsonl
+uploaded payments/shop.public.payments__p0__000000000600-000000000648.jsonl
+uploaded payments/shop.public.payments__p0__000000000650-000000000699.jsonl
+uploaded payments/shop.public.payments__p0__000000000700-000000000749.jsonl
+uploaded payments/shop.public.payments__p0__000000000750-000000000799.jsonl
+uploaded payments/dup__shop.public.payments__p0__000000000000-000000000049.jsonl
+{
+  "tag": "dis",
+  "require_newer": true,
+  "files_per_third": {
+    "customers": {
+      "oldest": [
+        "shop.public.customers__p0__000000000000-000000000049.jsonl",
+        "shop.public.customers__p0__000000000050-000000000099.jsonl",
+        "shop.public.customers__p0__000000000100-000000000148.jsonl"
+      ],
+      "middle": [
+        "shop.public.customers__p0__000000000150-000000000199.jsonl",
+        "shop.public.customers__p0__000000000200-000000000249.jsonl",
+        "shop.public.customers__p0__000000000250-000000000299.jsonl",
+        "shop.public.customers__p0__000000000300-000000000349.jsonl"
+      ],
+      "newest": [
+        "shop.public.customers__p0__000000000350-000000000399.jsonl",
+        "shop.public.customers__p0__000000000400-000000000449.jsonl",
+        "shop.public.customers__p0__000000000450-000000000496.jsonl"
+      ]
+    },
+    "products": {
+      "oldest": [
+        "shop.public.products__p0__000000000000-000000000049.jsonl"
+      ],
+      "middle": [
+        "shop.public.products__p0__000000000050-000000000099.jsonl",
+        "shop.public.products__p0__000000000100-000000000149.jsonl",
+        "shop.public.products__p0__000000000150-000000000199.jsonl"
+      ],
+      "newest": [
+        "shop.public.products__p0__000000000200-000000000236.jsonl"
+      ]
+    },
+    "orders": {
+      "oldest": [
+        "shop.public.orders__p0__000000000000-000000000049.jsonl",
+        "shop.public.orders__p0__000000000051-000000000099.jsonl",
+        "shop.public.orders__p0__000000000100-000000000149.jsonl",
+        "shop.public.orders__p0__000000000150-000000000199.jsonl",
+        "shop.public.orders__p0__000000000200-000000000249.jsonl",
+        "shop.public.orders__p0__000000000250-000000000299.jsonl",
+        "shop.public.orders__p0__000000000300-000000000349.jsonl",
+        "shop.public.orders__p0__000000000350-000000000399.jsonl",
+        "shop.public.orders__p0__000000000400-000000000449.jsonl",
+        "shop.public.orders__p0__000000000450-000000000499.jsonl"
+      ],
+      "middle": [
+        "shop.public.orders__p0__000000000500-000000000549.jsonl",
+        "shop.public.orders__p0__000000000550-000000000599.jsonl",
+        "shop.public.orders__p0__000000000600-000000000649.jsonl",
+        "shop.public.orders__p0__000000000650-000000000699.jsonl",
+        "shop.public.orders__p0__000000000700-000000000749.jsonl",
+        "shop.public.orders__p0__000000000750-000000000799.jsonl",
+        "shop.public.orders__p0__000000000800-000000000849.jsonl",
+        "shop.public.orders__p0__000000000850-000000000899.jsonl",
+        "shop.public.orders__p0__000000000900-000000000949.jsonl",
+        "shop.public.orders__p0__000000000950-000000000999.jsonl",
+        "shop.public.orders__p0__000000001000-000000001049.jsonl",
+        "shop.public.orders__p0__000000001050-000000001099.jsonl"
+      ],
+      "newest": [
+        "shop.public.orders__p0__000000001100-000000001149.jsonl",
+        "shop.public.orders__p0__000000001150-000000001199.jsonl",
+        "shop.public.orders__p0__000000001200-000000001249.jsonl",
+        "shop.public.orders__p0__000000001250-000000001299.jsonl",
+        "shop.public.orders__p0__000000001300-000000001349.jsonl",
+        "shop.public.orders__p0__000000001350-000000001399.jsonl",
+        "shop.public.orders__p0__000000001400-000000001449.jsonl",
+        "shop.public.orders__p0__000000001450-000000001499.jsonl",
+        "shop.public.orders__p0__000000001500-000000001549.jsonl",
+        "shop.public.orders__p0__000000001550-000000001591.jsonl"
+      ]
+    },
+    "order_items": {
+      "oldest": [
+        "shop.public.order_items__p0__000000000000-000000000048.jsonl",
+        "shop.public.order_items__p0__000000000050-000000000098.jsonl",
+        "shop.public.order_items__p0__000000000100-000000000149.jsonl",
+        "shop.public.order_items__p0__000000000150-000000000198.jsonl",
+        "shop.public.order_items__p0__000000000200-000000000249.jsonl",
+        "shop.public.order_items__p0__000000000250-000000000299.jsonl",
+        "shop.public.order_items__p0__000000000300-000000000349.jsonl",
+        "shop.public.order_items__p0__000000000350-000000000399.jsonl",
+        "shop.public.order_items__p0__000000000400-000000000449.jsonl",
+        "shop.public.order_items__p0__000000000450-000000000499.jsonl",
+        "shop.public.order_items__p0__000000000500-000000000549.jsonl",
+        "shop.public.order_items__p0__000000000550-000000000599.jsonl"
+      ],
+      "middle": [
+        "shop.public.order_items__p0__000000000600-000000000649.jsonl",
+        "shop.public.order_items__p0__000000000650-000000000699.jsonl",
+        "shop.public.order_items__p0__000000000700-000000000748.jsonl",
+        "shop.public.order_items__p0__000000000750-000000000799.jsonl",
+        "shop.public.order_items__p0__000000000801-000000000849.jsonl",
+        "shop.public.order_items__p0__000000000850-000000000899.jsonl",
+        "shop.public.order_items__p0__000000000900-000000000949.jsonl",
+        "shop.public.order_items__p0__000000000950-000000000999.jsonl",
+        "shop.public.order_items__p0__000000001000-000000001049.jsonl",
+        "shop.public.order_items__p0__000000001050-000000001099.jsonl",
+        "shop.public.order_items__p0__000000001100-000000001149.jsonl",
+        "shop.public.order_items__p0__000000001150-000000001199.jsonl",
+        "shop.public.order_items__p0__000000001201-000000001249.jsonl",
+        "shop.public.order_items__p0__000000001250-000000001299.jsonl"
+      ],
+      "newest": [
+        "shop.public.order_items__p0__000000001300-000000001349.jsonl",
+        "shop.public.order_items__p0__000000001350-000000001399.jsonl",
+        "shop.public.order_items__p0__000000001400-000000001449.jsonl",
+        "shop.public.order_items__p0__000000001450-000000001498.jsonl",
+        "shop.public.order_items__p0__000000001500-000000001548.jsonl",
+        "shop.public.order_items__p0__000000001550-000000001599.jsonl",
+        "shop.public.order_items__p0__000000001600-000000001649.jsonl",
+        "shop.public.order_items__p0__000000001651-000000001698.jsonl",
+        "shop.public.order_items__p0__000000001700-000000001749.jsonl",
+        "shop.public.order_items__p0__000000001751-000000001799.jsonl",
+        "shop.public.order_items__p0__000000001801-000000001849.jsonl",
+        "shop.public.order_items__p0__000000001850-000000001882.jsonl"
+      ]
+    },
+    "payments": {
+      "oldest": [
+        "shop.public.payments__p0__000000000000-000000000049.jsonl",
+        "shop.public.payments__p0__000000000050-000000000099.jsonl",
+        "shop.public.payments__p0__000000000100-000000000149.jsonl",
+        "shop.public.payments__p0__000000000150-000000000199.jsonl",
+        "shop.public.payments__p0__000000000200-000000000249.jsonl",
+        "shop.public.payments__p0__000000000250-000000000299.jsonl",
+        "shop.public.payments__p0__000000000300-000000000349.jsonl",
+        "shop.public.payments__p0__000000000350-000000000398.jsonl"
+      ],
+      "middle": [
+        "shop.public.payments__p0__000000000400-000000000449.jsonl",
+        "shop.public.payments__p0__000000000450-000000000499.jsonl",
+        "shop.public.payments__p0__000000000500-000000000549.jsonl",
+        "shop.public.payments__p0__000000000550-000000000599.jsonl",
+        "shop.public.payments__p0__000000000600-000000000648.jsonl",
+        "shop.public.payments__p0__000000000650-000000000699.jsonl",
+        "shop.public.payments__p0__000000000700-000000000749.jsonl",
+        "shop.public.payments__p0__000000000750-000000000799.jsonl"
+      ],
+      "newest": [
+        "shop.public.payments__p0__000000000800-000000000849.jsonl",
+        "shop.public.payments__p0__000000000850-000000000899.jsonl",
+        "shop.public.payments__p0__000000000900-000000000949.jsonl",
+        "shop.public.payments__p0__000000000950-000000000999.jsonl",
+        "shop.public.payments__p0__000000001000-000000001049.jsonl",
+        "shop.public.payments__p0__000000001050-000000001099.jsonl",
+        "shop.public.payments__p0__000000001100-000000001149.jsonl",
+        "shop.public.payments__p0__000000001150-000000001196.jsonl"
+      ]
+    }
+  },
+  "run1": {
+    "run_id": 688473016411290,
+    "seconds": 116.0,
+    "started": "2026-11-17 11:26"
+  },
+  "run2": {
+    "run_id": 737247449138822,
+    "seconds": 97.9,
+    "started": "2026-11-17 11:29"
+  },
+  "duplicate_copies": {
+    "customers": "dup__shop.public.customers__p0__000000000000-000000000049.jsonl (copy of shop.public.customers__p0__000000000000-000000000049.jsonl)",
+    "products": "dup__shop.public.products__p0__000000000000-000000000049.jsonl (copy of shop.public.products__p0__000000000000-000000000049.jsonl)",
+    "orders": "dup__shop.public.orders__p0__000000000000-000000000049.jsonl (copy of shop.public.orders__p0__000000000000-000000000049.jsonl)",
+    "order_items": "dup__shop.public.order_items__p0__000000000000-000000000048.jsonl (copy of shop.public.order_items__p0__000000000000-000000000048.jsonl)",
+    "payments": "dup__shop.public.payments__p0__000000000000-000000000049.jsonl (copy of shop.public.payments__p0__000000000000-000000000049.jsonl)"
+  },
+  "run3": {
+    "run_id": 194022739580384,
+    "seconds": 107.0,
+    "started": "2026-11-17 11:31"
+  },
+  "comparison": {
+    "customers": {
+      "rows": 152,
+      "reference_rows": 152,
+      "hash": "1fed6b9d47c64c95e69f33ce9783ac9f1509d5bf9970638a2d7323a94b1b30a6",
+      "reference_hash": "1fed6b9d47c64c95e69f33ce9783ac9f1509d5bf9970638a2d7323a94b1b30a6",
+      "identical": true
+    },
+    "products": {
+      "rows": 36,
+      "reference_rows": 36,
+      "hash": "673e219dbb1e4068fba3cb209a29f0e843fd05d9bbdacb62d66643797ac156f6",
+      "reference_hash": "673e219dbb1e4068fba3cb209a29f0e843fd05d9bbdacb62d66643797ac156f6",
+      "identical": true
+    },
+    "orders": {
+      "rows": 554,
+      "reference_rows": 554,
+      "hash": "c24a256630bea0e65d0b2aa41c97107280ee3c9a96e509a6e9f8d785f1cb7ab9",
+      "reference_hash": "c24a256630bea0e65d0b2aa41c97107280ee3c9a96e509a6e9f8d785f1cb7ab9",
+      "identical": true
+    },
+    "order_items": {
+      "rows": 1386,
+      "reference_rows": 1386,
+      "hash": "734a858f328ac7f451de20972391adc3da4c59e72a7dee0b86f076d8897436ca",
+      "reference_hash": "734a858f328ac7f451de20972391adc3da4c59e72a7dee0b86f076d8897436ca",
+      "identical": true
+    },
+    "payments": {
+      "rows": 554,
+      "reference_rows": 554,
+      "hash": "6850f4ede090d419bcb53bf5f39094f3ce008e56392d10892334022e8d0e1afa",
+      "reference_hash": "6850f4ede090d419bcb53bf5f39094f3ce008e56392d10892334022e8d0e1afa",
+      "identical": true
+    }
+  },
+  "ALL_IDENTICAL": true
+}
+# exit 0 at 11:33:11 IST
+
+$ scripts/with-secrets.sh uv run python -m shop.oracle --landing landing --silver shop_silver
+# started 11:33:11 IST
+{
+  "customers": {
+    "oracle_rows": 152,
+    "silver_rows": 152,
+    "oracle_hash": "1fed6b9d47c64c95e69f33ce9783ac9f1509d5bf9970638a2d7323a94b1b30a6",
+    "silver_hash": "1fed6b9d47c64c95e69f33ce9783ac9f1509d5bf9970638a2d7323a94b1b30a6",
+    "identical": true
+  },
+  "products": {
+    "oracle_rows": 36,
+    "silver_rows": 36,
+    "oracle_hash": "673e219dbb1e4068fba3cb209a29f0e843fd05d9bbdacb62d66643797ac156f6",
+    "silver_hash": "673e219dbb1e4068fba3cb209a29f0e843fd05d9bbdacb62d66643797ac156f6",
+    "identical": true
+  },
+  "orders": {
+    "oracle_rows": 554,
+    "silver_rows": 554,
+    "oracle_hash": "c24a256630bea0e65d0b2aa41c97107280ee3c9a96e509a6e9f8d785f1cb7ab9",
+    "silver_hash": "c24a256630bea0e65d0b2aa41c97107280ee3c9a96e509a6e9f8d785f1cb7ab9",
+    "identical": true
+  },
+  "order_items": {
+    "oracle_rows": 1386,
+    "silver_rows": 1386,
+    "oracle_hash": "734a858f328ac7f451de20972391adc3da4c59e72a7dee0b86f076d8897436ca",
+    "silver_hash": "734a858f328ac7f451de20972391adc3da4c59e72a7dee0b86f076d8897436ca",
+    "identical": true
+  },
+  "payments": {
+    "oracle_rows": 554,
+    "silver_rows": 554,
+    "oracle_hash": "6850f4ede090d419bcb53bf5f39094f3ce008e56392d10892334022e8d0e1afa",
+    "silver_hash": "6850f4ede090d419bcb53bf5f39094f3ce008e56392d10892334022e8d0e1afa",
+    "identical": true
+  },
+  "ALL_IDENTICAL": true
+}
+# exit 0 at 11:33:16 IST
+
+$ scripts/with-secrets.sh uv run python -m shop.history_check --silver shop_silver --seed 42 --events 5000
+# started 11:33:16 IST
+{
+  "customers": {
+    "history_rows": 418,
+    "expected_versions": 418,
+    "keys": 152,
+    "1_overlapping_or_gapped_intervals": 0,
+    "2_live_keys_without_exactly_one_current": 0,
+    "3_deleted_keys_with_a_current_row": 0,
+    "4_keys_with_wrong_version_count": 0,
+    "examples": [],
+    "5_current_rows_differing_from_silver": 0,
+    "pass": true
+  },
+  "products": {
+    "history_rows": 233,
+    "expected_versions": 233,
+    "keys": 36,
+    "1_overlapping_or_gapped_intervals": 0,
+    "2_live_keys_without_exactly_one_current": 0,
+    "3_deleted_keys_with_a_current_row": 0,
+    "4_keys_with_wrong_version_count": 0,
+    "examples": [],
+    "5_current_rows_differing_from_silver": 0,
+    "pass": true
+  },
+  "ALL_PASS": true
+}
+# exit 0 at 11:33:27 IST
+
+
+$ make down
+# started 11:33:27 IST
+docker compose -p shopcdc stop
+ Container shopcdc-connect-1 Stopping 
+ Container shopcdc-connect-1 Stopped 
+ Container shopcdc-kafka-1 Stopping 
+ Container shopcdc-postgres-1 Stopping 
+ Container shopcdc-postgres-1 Stopped 
+ Container shopcdc-kafka-1 Stopped 
+# exit 0 at 11:33:30 IST
+
+# ALL STEPS EXIT 0
