@@ -124,7 +124,7 @@ The proof scripts are `python -m shop.reconcile`, `scripts/reconcile_canfail.py`
 - `valid_from` and `valid_to` in the history tables are transaction commit times; versions written in one transaction share a time. Use `valid_from_lsn` and `valid_to_lsn` for exact ordering.
 - Two dbt staging models read raw JSON from bronze (the insert log position of an order, and the funnel's status path) instead of silver.
 - The marts are full table rebuilds, which is fine at this size.
-- The GitHub Actions workflow (`.github/workflows/ci.yml`) has not yet run on GitHub. `make ci` runs the same steps locally.
+- The CI workflow (`.github/workflows/ci.yml`) runs on every push and pull request, but only lint, unit tests and `dbt parse`, without Databricks access; its first run on GitHub, on 17 Nov 2026, passed (see the repository's Actions tab).
 
 ## How this project was built
 

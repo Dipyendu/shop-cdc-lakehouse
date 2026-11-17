@@ -93,7 +93,7 @@ A Databricks Asset Bundle (`databricks.yml`) defines the job `shop_pipeline` wit
 
 ## Limits
 
-The data is simulated. The lander runs on the laptop. Runs are incremental batches started by hand, not scheduled and not continuous streaming. The CI workflow has not run on GitHub yet.
+The data is simulated. The lander runs on the laptop. Runs are incremental batches started by hand, not scheduled and not continuous streaming. The CI workflow runs on every push and pull request, but only lint, unit tests and `dbt parse`, without Databricks access; its first run on GitHub, on 17 Nov 2026, passed (see the repository's Actions tab).
 
 ## Interview questions
 
